@@ -1,0 +1,4 @@
+Bundled license information:
+
+snarkjs/build/browser.esm.js:
+  /*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) */

@@ -1,0 +1,7 @@
+'use client';
+import { formatUnits } from 'viem';
+
+export function TransferImpact({ balance, amount, maxFee, symbol = 'ETH', decimals = 18, self = false, token = false, checkedAt }: { balance?: bigint; amount: bigint; maxFee: bigint; symbol?: string; decimals?: number; self?: boolean; token?: boolean; checkedAt: number }) {
+  const remaining = balance == null ? null : balance - (self ? 0n : amount) - (token ? 0n : maxFee);
+  return <div className="qd-transfer-impact"><h3>What changes for you</h3><dl className="qd-review"><div><dt>{token ? `${symbol} balance before` : 'Native balance before'}</dt><dd>{balance == null ? 'Unavailable' : `${formatUnits(balance,decimals)} ${symbol}`}</dd></div><div><dt>{self ? 'Transfer to your own account' : 'Amount leaving your account'}</dt><dd>{formatUnits(amount,decimals)} {symbol}</dd></div><div><dt>{token ? 'Native fee reserve (separate)' : 'Maximum fee reserve'}</dt><dd>{formatUnits(maxFee,18)} ETH</dd></div><div><dt>{token ? 'Expected token units remaining' : 'Balance after maximum fee'}</dt><dd>{remaining == null || remaining < 0n ? 'Unavailable — refresh review' : `${formatUnits(remaining,decimals)} ${symbol}`}</dd></div><div><dt>Review created</dt><dd>{new Date(checkedAt).toLocaleTimeString()} · valid for 2 minutes</dd></div></dl><p className="qd-fine-print">Arithmetic estimate, not a guarantee of final state. Actual fees may be lower. {token && 'Transfer-tax, rebasing and other nonstandard token behavior can change the outcome.'} Balance, fees and nonce are checked again before signing.</p></div>;
+}

@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-11T01:15:43.231Z",
+  "chainId": 4663,
+  "address": "0x5acb76ff3adb392fbdb4ec120d1494757aede484",
+  "blockNumber": "111324262",
+  "blockHash": "0xa5e27ab0bfd50d59c7f226d8aacdb4c4ffc7fc9feda84da9ce3bae8c3097e198",
+  "name": "Qozmo",
+  "symbol": "QZO",
+  "decimals": 18,
+  "totalSupply": "1000000000000000000000000000",
+  "runtimeHash": "0xaa6cee280dcaa1fa73be230d8ea8479ad556455abcb076b722c6f8ce93864e83",
+  "scope": "Public metadata for the configured token only. Does not certify issuer identity, supply controls, an audit, wallet utility, fee capture, or investment value."
+}

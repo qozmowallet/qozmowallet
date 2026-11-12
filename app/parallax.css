@@ -1,0 +1,62 @@
+/* Each scroll layer owns its transform. Its child keeps the original rotation
+   and independent floating animation, so the artwork never loses its layout. */
+.qozmo-parallax-scene { position: relative; }
+.qozmo-parallax-layer { transform-origin: center; }
+
+/* Extra background coverage prevents exposed edges at either end of travel. */
+.background-grid.qozmo-parallax-layer { inset-block: -90px; pointer-events: none; }
+.closing-grid.qozmo-parallax-layer { inset-block: -60px; pointer-events: none; }
+
+.wallet-art.qozmo-parallax-scene { isolation: isolate; }
+.wallet-depth-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.wallet-depth-layer > :is(.wallet-window, .spending-window) { pointer-events: auto; }
+.depth-glow { z-index: 0; }
+.depth-spending { z-index: 2; }
+.depth-wallet { z-index: 3; }
+.depth-doodle { z-index: 4; }
+.depth-pill { z-index: 5; }
+
+.how-depth-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.depth-ring { z-index: 0; }
+.depth-tile { z-index: 2; }
+.depth-label { z-index: 3; }
+.faq-depth-star { width: fit-content; pointer-events: none; }
+.closing-depth-star { position: absolute; inset: 0; pointer-events: none; }
+
+/* Pause is immediate, including spring settling and desktop pointer movement. */
+[data-motion="off"] .qozmo-parallax-layer { transform: none !important; will-change: auto !important; }
+@media (prefers-reduced-motion: reduce) {
+  .qozmo-parallax-layer { transform: none !important; will-change: auto !important; }
+}
+
+@media (max-width: 760px) {
+  .background-grid.qozmo-parallax-layer { inset-block: -24px; }
+  .closing-grid.qozmo-parallax-layer { inset-block: -18px; }
+  .faq-depth-star { display: none; }
+
+  /* On a narrow screen, put the spending controls in front of the lower
+     sample activity instead of hiding their tap targets behind the wallet. */
+  .wallet-art { height: 930px; }
+  .wallet-window { left: 50%; right: auto; transform: translateX(-50%) rotate(-5deg); }
+  .depth-spending { z-index: 4; }
+  .spending-window { top: 540px; left: 50%; transform: translateX(-50%) rotate(5deg); }
+  .floating-pill { bottom: 10px; right: 8px; }
+  .art-caption { bottom: -14px; right: 19px; }
+}
+
+@media (max-width: 389px) {
+  .wallet-art { height: 870px; }
+  .spending-window { top: 510px; }
+  .floating-pill { bottom: 9px; }
+}

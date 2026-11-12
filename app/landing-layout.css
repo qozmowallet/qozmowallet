@@ -1,0 +1,215 @@
+/* One content grid and a consistent rhythm across the landing page. */
+.landing-main { --landing-space: 88px; }
+.landing-main .container,
+.landing-header .site-header.container,
+.landing-footer.container { width: min(1180px, calc(100% - 64px)); }
+.landing-header .site-header { grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px; border: 1px solid #e7e1ed; background: #ffffffeb; }
+.landing-header .header-cta, .landing-header .mobile-nav .button-black,
+.landing-main .button-black { background: #171719; color: #fff; }
+.landing-main .hero-buttons .button-outline { background: transparent; color: #38313e; border: 1px solid #dcd6e2; }
+.landing-header .desktop-nav { min-width: 0; gap: 3px; }
+.landing-header .desktop-nav a { padding-inline: 15px; white-space: nowrap; }
+.landing-main .hero { align-items: center; gap: 44px; padding-block: 38px 24px; min-height: 0; }
+.landing-main .hero-copy { padding-top: 0; padding-bottom: 32px; }
+.landing-main .hero h1 { font-size: clamp(62px, 6.1vw, 82px); }
+.landing-main .hero-description { max-width: 450px; }
+.landing-main .hero-buttons { flex-wrap: wrap; }
+.landing-main .hero-buttons .button-large { min-height: 52px; padding-inline: 26px; gap: 16px; }
+.landing-main .hero-note { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; margin-top: 20px; }
+.landing-main .hero-note button { display: inline-flex; align-items: center; gap: 7px; padding: 0; border: 0; background: transparent; color: #786587; font: inherit; cursor: pointer; }
+.landing-main .hero-note button:hover { color: #473451; }
+.landing-main .hero-details { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 27px; padding-top: 22px; border-top: 1px solid #e7e2e9; color: #756d7c; font-size: 11px; line-height: 1.6; }
+.landing-main .hero-details > span, .landing-main .hero-details > a { display: inline-flex; align-items: center; gap: 7px; }
+.landing-main .hero-details i { width: 5px; height: 5px; flex: 0 0 auto; border-radius: 50%; background: #a58bb7; }
+.landing-main .hero-details > span:nth-child(2) i { background: #88a398; }
+.landing-main .hero-details > a { color: #786187; }
+.landing-main .hero-details > a:hover { color: #473451; }
+.landing-main .hero-details > a i { background: #c78ba6; }
+.landing-main .market-art { --phone-scale: .54; height: 660px; margin: 0; }
+.landing-main .phone-handset { top: -30px; }
+/* The ecosystem shares the hero's content grid instead of flowing as inline text. */
+.landing-main .landing-ecosystem { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); align-items: center; gap: 48px; padding-block: 64px; border-block: 1px solid #e7e2e9; }
+.landing-main .ecosystem-intro { min-width: 0; }
+.landing-main .ecosystem-intro .section-eyebrow { display: block; font-size: 9px; line-height: 1.8; letter-spacing: 1.6px; }
+.landing-main .ecosystem-intro h2 { margin-top: 18px; font-size: clamp(34px, 3.3vw, 44px); font-weight: 500; line-height: 1.14; letter-spacing: -1.9px; }
+.landing-main .ecosystem-intro > p { margin-top: 18px; max-width: 270px; color: #7c7482; font-size: 13px; line-height: 1.85; }
+.landing-main .ecosystem-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 18px; min-width: 0; }
+.landing-main .ecosystem-card { display: flex; flex-direction: column; min-width: 0; padding: 27px; border: 1px solid #e4dfe8; border-radius: 24px; background: #fff; color: #29252e; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.landing-main .ecosystem-robinhood { background: #f1f3ef; border-color: #e0e5dc; }
+.landing-main .ecosystem-uniswap { background: #f7f1f6; border-color: #eadfe8; }
+.landing-main .ecosystem-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #817687; font-size: 9px; font-weight: 600; letter-spacing: 1.5px; }
+.landing-main .ecosystem-card-top > svg { box-sizing: content-box; padding: 8px; border: 1px solid #ffffff; border-radius: 50%; background: #ffffffb3; color: #65576f; }
+.landing-main .ecosystem-card h3 { display: flex; align-items: center; min-height: 42px; margin-top: 24px; }
+.landing-main .ecosystem-card h3 img { display: block; max-width: 100%; height: auto; }
+.landing-main .ecosystem-card > p { margin-block: 17px 28px; color: #766b7c; font-size: 13px; line-height: 1.85; }
+.landing-main .ecosystem-card-bottom { display: flex; align-items: center; gap: 12px; justify-content: space-between; margin-top: auto; padding-top: 18px; border-top: 1px solid #ded6e2; font-size: 11px; font-weight: 600; line-height: 1.7; }
+.landing-main .ecosystem-card:hover { border-color: #baabc7; box-shadow: 0 12px 28px #3823440a; transform: translateY(-3px); }
+.landing-main .ecosystem-card:focus-visible, .landing-main .hero-note button:focus-visible, .landing-main .hero-details a:focus-visible { outline: 2px solid #86629f; outline-offset: 5px; }
+.landing-main .essentials-strip { display: grid; grid-template-columns: 1fr repeat(3, auto); align-items: center; gap: 32px; margin-top: 0; padding-block: 25px; border-block: 1px solid #e7e2e9; }
+.landing-main .essentials-strip > p { font-size: 12px; color: #948a9b; line-height: 1.7; }
+.landing-main .essentials-strip > p strong { font-weight: 550; color: #514659; }
+.landing-main .essentials-strip > div { display: flex; align-items: center; gap: 10px; font-size: 11px; color: #817589; }
+.landing-main .essentials-strip > div::before { content: ''; flex: 0 0 auto; width: 6px; height: 6px; background: #b2a0c7; border-radius: 50%; }
+.landing-main .essentials-strip > div:nth-child(3)::before { background: #91b6ba; }
+.landing-main .essentials-strip > div:nth-child(4)::before { background: #c99db9; }
+.landing-main .features-section { padding-block: var(--landing-space); }
+.landing-main .section-heading { align-items: flex-end; gap: 40px; margin-bottom: 38px; }
+.landing-main .section-heading h2,
+.landing-main .how-content h2,
+.landing-main .faq-intro h2 { font-size: clamp(38px, 4vw, 50px); line-height: 1.15; letter-spacing: -2.3px; }
+.landing-main .section-heading > p { margin: 0 0 3px; font-size: 13px; line-height: 1.9; color: #9b91a3; }
+.landing-main .how-section { padding-block: 64px; background: #f0eeef; border-color: #e8e3e9; }
+.landing-main .how-layout { gap: 80px; }
+.landing-main .how-visual { min-height: 420px; }
+.landing-main .orbital-ring { width: 350px; height: 350px; }
+.landing-main .ring-two { width: 410px; height: 410px; }
+.landing-main .how-content { padding-block: 12px; }
+.landing-main .how-intro { font-size: 13px; line-height: 1.9; }
+.landing-main .steps { margin-top: 28px; gap: 24px; }
+.landing-main .steps h3 { font-size: 13px; }
+.landing-main .steps p { font-size: 11px; line-height: 1.8; }
+.landing-main .qex-banner { display: grid; grid-template-columns: minmax(0, 1fr) 265px; align-items: center; gap: 50px; margin-block: var(--landing-space); padding: 44px 48px; border-radius: 26px; }
+.landing-main .qex-banner h2 { font-size: clamp(32px, 3.5vw, 43px); margin-block: 16px; letter-spacing: -1.8px; }
+.landing-main .qex-banner-copy { min-width: 0; }
+.landing-main .qex-banner p { font-size: 13px; line-height: 1.9; }
+.landing-main .qex-banner-action { padding: 25px 18px; border: 1px solid #e9e1ef; border-radius: 20px; background: #ffffff9c; gap: 13px; }
+.landing-main .qex-chrome-symbol { width: 44px; height: 44px; border: 0; background: transparent; margin: 0 0 3px; }
+.landing-main .qex-banner-action .button { width: 100%; min-height: 46px; padding: 0 17px; font-size: 11px; gap: 18px; }
+.landing-main .qex-banner-action small { text-align: center; font-size: 8px; line-height: 1.7; }
+.landing-main .faq-section { padding-top: 0; padding-bottom: var(--landing-space); grid-template-columns: .85fr 1.15fr; align-items: start; gap: 90px; }
+.landing-main .faq-intro > p { font-size: 13px; line-height: 1.9; }
+.landing-main .faq-list { min-width: 0; padding-top: 0; }
+.landing-main .faq-item h3 > button { font-size: 13px; padding-block: 21px; gap: 22px; line-height: 1.7; }
+.landing-main .faq-answer p { font-size: 12px; line-height: 1.95; color: #94889e; }
+.landing-main .closing-section { padding: 52px 28px 46px; border-radius: 26px; }
+.landing-main .closing-section h2 { font-size: clamp(37px, 4.2vw, 52px); line-height: 1.15; letter-spacing: -2.1px; }
+.landing-main .closing-section p { font-size: 13px; }
+.landing-main .closing-section .button { min-height: 50px; font-size: 12px; }
+.site-footer.landing-footer { padding-top: 60px; padding-bottom: 25px; }
+.landing-footer .footer-top { border: 0; padding-bottom: 32px; }
+.landing-footer .qca-contract { display: grid; grid-template-columns: 170px minmax(0, 1fr) 130px; align-items: center; gap: 26px; width: 100%; margin: 0; padding: 20px 23px; border-radius: 17px; box-shadow: none; }
+.landing-footer .qca-heading { align-items: flex-start; flex-direction: column; gap: 7px; }
+.landing-footer .qca-heading #qca-title { font-size: 11px; }
+.landing-footer .qca-address-row { margin: 0; gap: 16px; }
+.landing-footer .qca-address { font-size: 11px; }
+.landing-footer .qca-copy > span { display: inline; }
+.landing-footer .qca-bottom { flex-direction: column; align-items: flex-end; gap: 9px; margin: 0; text-align: right; }
+.landing-footer .footer-bottom { margin-top: 24px; padding-top: 20px; }
+
+@media (min-width: 1500px) {
+  .landing-main .hero { padding-top: 44px; }
+  .landing-main .market-art { --phone-scale: .57; height: 700px; }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .landing-main .landing-ecosystem { grid-template-columns: minmax(0, 1fr); gap: 30px; padding-block: 48px; }
+  .landing-main .ecosystem-intro { display: grid; grid-template-columns: 1fr 1fr; column-gap: 36px; align-items: end; }
+  .landing-main .ecosystem-intro .section-eyebrow { grid-column: 1 / -1; }
+  .landing-main .ecosystem-intro > p { margin-top: 0; }
+  .landing-main .hero { gap: 24px; }
+  .landing-main .hero h1 { font-size: 62px; }
+  .landing-main .market-art { --phone-scale: .49; height: 615px; }
+  .landing-main .how-layout { gap: 40px; }
+  .landing-main .how-visual { min-height: 375px; }
+  .landing-main .orbital-ring { width: 290px; height: 290px; }
+  .landing-main .ring-two { width: 350px; height: 350px; }
+  .landing-main .essentials-strip { gap: 22px; }
+  .landing-main .essentials-strip > div { font-size: 10px; }
+  .landing-main .qex-banner { gap: 25px; padding: 34px; }
+  .landing-footer .qca-contract { grid-template-columns: 150px minmax(0, 1fr); gap: 18px; }
+  .landing-footer .qca-bottom { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
+}
+/* Tablet navigation uses the same bounded menu as the phone layout. */
+@media (min-width: 761px) and (max-width: 980px) {
+  .landing-header .site-header { display: flex; justify-content: space-between; }
+  .landing-header .desktop-nav { display: none; }
+  .landing-header .menu-toggle { display: inline-flex; width: 40px; height: 40px; background: #eee8f380; }
+  .landing-header .mobile-nav { display: flex; position: absolute; top: calc(100% + 10px); inset-inline: 0; flex-direction: column; padding: 12px; border: 1px solid #e7e0ee; border-radius: 22px; background: #fcfbfdf7; box-shadow: 0 18px 45px #281a381a; max-height: calc(100dvh - 125px); overflow-y: auto; }
+  .landing-header .mobile-nav > a { padding: 14px 18px; font-size: 13px; border-radius: 12px; }
+  .landing-header .mobile-nav > a.active { color: #5e476e; background: #eee6f5; }
+  .landing-header .mobile-nav .button { margin-top: 10px; }
+  .landing-main .hero h1 { font-size: 54px; }
+  .landing-main .hero-description { font-size: 12px; }
+  .landing-main .market-art { --phone-scale: .45; height: 575px; }
+  .landing-main .hero-buttons .button-large { font-size: 11px; padding-inline: 20px; }
+  .landing-main .faq-section { gap: 45px; }
+}
+@media (max-width: 760px) {
+  .landing-main { --landing-space: 62px; }
+  .landing-main .container, .landing-footer.container { width: calc(100% - 40px); }
+  .landing-header .site-header.container { width: calc(100% - 24px); }
+  .landing-main .hero { gap: 0; padding-top: 33px; padding-bottom: 0; }
+  .landing-main .hero-copy { padding: 0; }
+  .landing-main .hero h1 { font-size: clamp(54px, 10.7vw, 76px); line-height: 1.09; }
+  .landing-main .hero-description { font-size: 13px; max-width: 420px; }
+  .landing-main .hero-buttons { gap: 9px; margin-top: 25px; }
+  .landing-main .hero-buttons .button-large { min-height: 49px; padding-inline: 22px; font-size: 12px; gap: 12px; }
+  .landing-main .hero-note { gap: 9px; font-size: 10px; margin-top: 18px; }
+  .landing-main .hero-details { gap: 11px 16px; margin-top: 23px; padding-top: 18px; font-size: 10px; }
+  .landing-main .hero-art-reveal { align-self: center; }
+  .landing-main .market-art { --phone-scale: .49; height: 635px; width: min(425px, 100%); margin-top: 25px; }
+  .landing-main .phone-handset { top: -25px; }
+  .landing-main .landing-ecosystem { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 42px; }
+  .landing-main .ecosystem-intro h2 { font-size: 38px; letter-spacing: -1.8px; }
+  .landing-main .ecosystem-intro > p { max-width: 340px; margin-top: 16px; }
+  .landing-main .ecosystem-card { padding: 23px; border-radius: 22px; }
+  .landing-main .essentials-strip { grid-template-columns: 1fr 1fr; gap: 21px 14px; padding-block: 23px; }
+  .landing-main .essentials-strip > p { font-size: 11px; }
+  .landing-main .essentials-strip > div { font-size: 10px; gap: 8px; line-height: 1.7; }
+  .landing-main .section-heading { display: block; margin-bottom: 27px; }
+  .landing-main .section-heading h2, .landing-main .how-content h2, .landing-main .faq-intro h2 { font-size: 38px; letter-spacing: -1.8px; }
+  .landing-main .section-heading > p { margin-top: 17px; font-size: 12px; max-width: 340px; }
+  .landing-main .how-section { padding-block: 38px 44px; }
+  .landing-main .how-layout { gap: 20px; }
+  .landing-main .how-visual { min-height: 330px; max-width: 370px; }
+  .landing-main .orbital-ring { width: 270px; height: 270px; }
+  .landing-main .ring-two { width: 325px; height: 325px; }
+  .landing-main .how-content { padding: 10px 0 0; max-width: none; }
+  .landing-main .how-intro { font-size: 12px; }
+  .landing-main .steps { gap: 22px; }
+  .landing-main .steps p { font-size: 11px; }
+  .landing-main .qex-banner { grid-template-columns: minmax(0, 1fr); gap: 26px; padding: 28px 24px; border-radius: 23px; }
+  .landing-main .qex-banner h2 { font-size: 33px; }
+  .landing-main .qex-banner p { font-size: 12px; }
+  .landing-main .qex-banner p br { display: none; }
+  .landing-main .qex-banner-action { width: 100%; padding: 22px; align-items: center; }
+  .landing-main .qex-banner-action .button { font-size: 12px; }
+  .landing-main .qex-chrome-symbol { display: none; }
+  .landing-main .qex-banner-action small { font-size: 9px; }
+  .landing-main .faq-section { display: block; }
+  .landing-main .faq-intro > p { font-size: 12px; }
+  .landing-main .faq-list { margin-top: 28px; }
+  .landing-main .faq-item h3 > button { font-size: 12px; padding-block: 18px; }
+  .landing-main .faq-answer { padding-right: 12px; }
+  .landing-main .faq-answer p { font-size: 11px; }
+  .landing-main .closing-section { padding: 40px 20px 35px; border-radius: 23px; }
+  .landing-main .closing-section h2 { font-size: 37px; letter-spacing: -1.7px; }
+  .landing-main .closing-section p { font-size: 11px; }
+  .landing-main .closing-section .button { min-height: 47px; font-size: 11px; }
+  .site-footer.landing-footer { padding-top: 42px; }
+  .landing-footer .qca-contract { grid-template-columns: minmax(0, 1fr); gap: 15px; padding: 18px 16px; }
+  .landing-footer .qca-heading { flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; }
+  .landing-footer .qca-address-row { gap: 10px; }
+  .landing-footer .qca-address { font-size: 10px; }
+  .landing-footer .qca-bottom { flex-direction: row; justify-content: space-between; align-items: center; text-align: left; }
+  .landing-footer .footer-bottom { margin-top: 22px; }
+}
+@media (max-width: 600px) {
+  .landing-main .ecosystem-links { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .landing-main .ecosystem-card h3 { margin-top: 18px; }
+  .landing-main .ecosystem-card > p { margin-bottom: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-main .ecosystem-card { transition: none; }
+  .landing-main .ecosystem-card:hover { transform: none; }
+}
+[data-motion="off"] .landing-main .ecosystem-card { transition: none; }
+[data-motion="off"] .landing-main .ecosystem-card:hover { transform: none; }
+@media (max-width: 389px) {
+  .landing-main .hero h1 { font-size: 51px; }
+  .landing-main .hero-buttons .button-large { font-size: 11px; padding-inline: 19px; }
+  .landing-main .hero-description { font-size: 12px; }
+  .landing-main .market-art { --phone-scale: .45; height: 580px; }
+  .landing-main .qex-banner { padding-inline: 20px; }
+  .landing-main .qex-banner h2 { font-size: 29px; }
+  .landing-footer .qca-copy > span { display: none; }
+}

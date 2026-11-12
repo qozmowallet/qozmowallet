@@ -1,0 +1,150 @@
+/*
+ * Magic UI components, Copyright (c) Magic UI, MIT.
+ * Upstream: https://github.com/magicuidesign/magicui
+ * License: ../components/magicui/LICENSE
+ * Official component utilities and registry keyframes translated to scoped CSS.
+ */
+
+/* Low-specificity presentation lets existing Qozmo button sizes stay in control. */
+:where(.mui-shimmer-button) {
+  position: relative;
+  z-index: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.5rem;
+  color: white;
+  background: var(--bg);
+  white-space: nowrap;
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: transform 300ms ease-in-out;
+}
+.mui-shimmer-button:active { transform: translateY(1px); }
+.mui-shimmer-spark-container {
+  position: absolute;
+  inset: 0;
+  z-index: -30;
+  container-type: size;
+  overflow: visible;
+  filter: blur(2px);
+  pointer-events: none;
+}
+.mui-shimmer-spark {
+  position: absolute;
+  inset: 0;
+  height: 100cqh;
+  aspect-ratio: 1;
+  border-radius: 0;
+  mask: none;
+  animation: mui-shimmer-slide var(--speed) ease-in-out infinite alternate;
+}
+.mui-shimmer-spark-light {
+  position: absolute;
+  inset: -100%;
+  width: auto;
+  translate: 0 0;
+  rotate: 0deg;
+  background: conic-gradient(from calc(270deg - (var(--spread) * 0.5)), transparent 0, var(--shimmer-color) var(--spread), transparent var(--spread));
+  animation: mui-spin-around calc(var(--speed) * 2) infinite linear;
+}
+.mui-shimmer-highlight {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  box-shadow: inset 0 -8px 10px #ffffff1f;
+  transform: translateZ(0);
+  transition: box-shadow 300ms ease-in-out;
+  pointer-events: none;
+}
+.mui-shimmer-button:hover .mui-shimmer-highlight { box-shadow: inset 0 -6px 10px #ffffff3f; }
+.mui-shimmer-button:active .mui-shimmer-highlight { box-shadow: inset 0 -10px 10px #ffffff3f; }
+.mui-shimmer-backdrop {
+  position: absolute;
+  inset: var(--cut);
+  z-index: -20;
+  border-radius: var(--radius);
+  background: var(--bg);
+  pointer-events: none;
+}
+@keyframes mui-shimmer-slide {
+  to { transform: translate(calc(100cqw - 100%), 0); }
+}
+@keyframes mui-spin-around {
+  0% { transform: translateZ(0) rotate(0); }
+  15%, 35% { transform: translateZ(0) rotate(90deg); }
+  65%, 85% { transform: translateZ(0) rotate(270deg); }
+  100% { transform: translateZ(0) rotate(360deg); }
+}
+
+.mui-border-beam {
+  position: absolute;
+  inset: 0;
+  border: var(--border-beam-width) solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  /* Exclude the opaque padding mask from the border mask to leave a thin ring. */
+  -webkit-mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+  -webkit-mask-clip: padding-box, border-box;
+  -webkit-mask-composite: xor;
+  mask-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+  mask-clip: padding-box, border-box;
+  mask-composite: exclude;
+}
+.mui-border-beam-light {
+  position: absolute;
+  aspect-ratio: 1;
+  background: linear-gradient(to left, var(--color-from), var(--color-to), transparent);
+  pointer-events: none;
+}
+
+:where(.mui-animated-shiny-text) {
+  margin-inline: auto;
+  max-width: 28rem;
+  color: rgb(82 82 82 / 70%);
+  background-image: linear-gradient(to right, transparent, rgb(0 0 0 / 80%) 50%, transparent);
+  background-size: var(--shiny-width) 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: mui-shiny-text 8s infinite;
+}
+@keyframes mui-shiny-text {
+  0%, 90%, 100% { background-position: calc(-100% - var(--shiny-width)) 0; }
+  30%, 60% { background-position: calc(100% + var(--shiny-width)) 0; }
+}
+
+/* CSS covers the first server render; Motion hooks also stop JS animations. */
+[data-motion="off"] .mui-blur-fade,
+.mui-blur-fade[data-motion-static="true"] {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+[data-motion="off"] .mui-border-beam,
+[data-motion="off"] .mui-shimmer-spark-container { display: none; }
+[data-motion="off"] .mui-animated-shiny-text,
+[data-motion="off"] .mui-shimmer-spark,
+[data-motion="off"] .mui-shimmer-spark-light {
+  animation: none !important;
+}
+[data-motion="off"] .mui-animated-shiny-text { background-image: none; }
+[data-motion="off"] .mui-shimmer-button,
+[data-motion="off"] .mui-shimmer-highlight { transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mui-blur-fade { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .mui-border-beam, .mui-shimmer-spark-container { display: none; }
+  .mui-animated-shiny-text, .mui-shimmer-spark, .mui-shimmer-spark-light { animation: none !important; }
+  .mui-animated-shiny-text { background-image: none; }
+  .mui-shimmer-button, .mui-shimmer-highlight { transition: none; }
+}
+@media (scripting: none) {
+  .mui-blur-fade { opacity: 1 !important; transform: none !important; filter: none !important; }
+}

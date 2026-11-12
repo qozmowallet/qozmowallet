@@ -1,0 +1,1 @@
+import{ma as e}from"./chunk-6WP6SVXA.js";import{c as a}from"./chunk-DCANE7XH.js";var r=a(e());function o({className:n=""}){return(0,r.jsx)("img",{className:`qozmo-mark ${n}`,src:"/brand/qozmo-stag-light.png",width:48,height:60,alt:"","aria-hidden":"true",decoding:"async",draggable:!1})}export{o as a};

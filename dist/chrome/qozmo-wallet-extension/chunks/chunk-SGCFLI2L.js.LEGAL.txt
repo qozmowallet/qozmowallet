@@ -1,0 +1,5 @@
+Bundled license information:
+
+@noble/post-quantum/utils.js:
+@noble/post-quantum/slh-dsa.js:
+  /*! noble-post-quantum - MIT License (c) 2024 Paul Miller (paulmillr.com) */

@@ -1,0 +1,1 @@
+import{a as n}from"./chunk-6WP6SVXA.js";import{c as e}from"./chunk-DCANE7XH.js";var o=e(n()),c=(0,o.createContext)(null),r=()=>(0,o.useContext)(c);function u(){let t=r();if(!t)throw new Error("Open the Qozmo account workspace first.");return t}export{r as a,u as b};

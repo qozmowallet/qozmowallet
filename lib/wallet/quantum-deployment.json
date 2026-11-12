@@ -1,0 +1,14 @@
+{
+  "chainId": 46630,
+  "entryPoint": "0x0000000071727De22E5E9d8BAf0edAc6f37da032",
+  "factory": "0xBe3a0B5f698a4F83C7679aAe7E7743D5E3d2F468",
+  "accountImplementation": "0xcCBA0b7B10f809e8f3B3C1e9835acDeEdC020c39",
+  "deployBlock": 137245774,
+  "deploymentTransaction": "0x5888c12bbd277d89ed2ddf628b92ca8f094bec2583e3a3c1d5e247dd1862f570",
+  "deploymentDeployer": "0x4e7d0106D3D91b55FdB73d31bb09d1a470707C29",
+  "runtimeHashes": {
+    "entryPoint": "0x8db5ff695839d655407cc8490bb7a5d82337a86a6b39c3f0258aa6c3b582fc58",
+    "factory": "0x610dcd65d53fc1e02177f0162fa25047f36cbcafffbe4e9ae0e98ff71eb8a14e",
+    "accountImplementation": "0x3ef51b305f0ef1a88ccebb0a5486963de3049ac379f3bfaa08e43d35dca80299"
+  }
+}

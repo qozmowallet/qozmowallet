@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "chainId": 46630,
+  "deployer": "0x67b8C398727526e79fA90DD9d1AdAE8F4B573E6b",
+  "denomination": "1000000000000000",
+  "manifestHash": "23c992a98db9c84c17c5910115e088828cbef6f61505636817c12e9814fa7af1",
+  "researchOnly": true,
+  "feeCapUsed": "109310268000000",
+  "deploymentGasFeeWei": "74935180000000",
+  "contracts": {
+    "Poseidon2": {
+      "status": "confirmed",
+      "hash": "0x6093f968d74d0ac0e71f1f7c265d56af747c3dc9852348f62a0f83c14c4d60ed",
+      "nonce": 0,
+      "address": "0x934EcAA425B420cf5bfB5C91B455604bC4bb8D24",
+      "feeCap": "31445940000000",
+      "blockNumber": "151864446",
+      "blockHash": "0x825d316523b8c0c7ca82b52d337ae7dd9b680846ac7886c2c71208cedded5cb0",
+      "gasUsed": "2157126",
+      "codeHash": "0x354b26999e434f8256d168395315e1f51fc15bf49bf2e6bb58fc549bd597e7da"
+    },
+    "Poseidon4": {
+      "status": "confirmed",
+      "hash": "0xb7c95cdb835769aec2c126dfd52ba94429725ea50b7c544630d18932844a7a3e",
+      "nonce": 1,
+      "address": "0xbFc56f6757d75d6AB2E6F9cF42391f39b2F20982",
+      "feeCap": "51951168000000",
+      "blockNumber": "151864476",
+      "blockHash": "0xaa26b65fc71ea09632c1073e573cb8022168c2b177dabca2a499e9c2dbb7200a",
+      "gasUsed": "3569887",
+      "codeHash": "0xaa8081e99244f5cd89f2e02e0c4a89ec873ac5eb5583621196c1b138c994024c"
+    },
+    "Groth16Verifier": {
+      "status": "confirmed",
+      "hash": "0x897681f4bfd08283e64870ee4cec64b0f1fb0365f94465db22d71fcaa7c5b269",
+      "nonce": 2,
+      "address": "0x16bE8A958188C55EFc385ECa5D2a1Ea04d34dB82",
+      "feeCap": "6025704000000",
+      "blockNumber": "151864501",
+      "blockHash": "0x52bfb0c283454d6415aee556d0f9325cfd8d07f1afdc63e2ef44dc1cbf45af73",
+      "gasUsed": "405732",
+      "codeHash": "0x21adb0dcebb833982837bd58589e5072981e038addb1330b22fc409586d89ede"
+    },
+    "QozmoPrivacyPool": {
+      "status": "confirmed",
+      "hash": "0x6ca373a46d5e0ea77dc85becce9ad5802a4b02e01511414685d542a47e78dbbf",
+      "nonce": 3,
+      "address": "0x1bF754aCec18E5025Cd5a64F95C76A4B7F3eed0F",
+      "feeCap": "19887456000000",
+      "blockNumber": "151864532",
+      "blockHash": "0xefafd7ea32b35069223c2a1075965f9fb020fd9ee8650d80d80c7931b49227ec",
+      "gasUsed": "1360773",
+      "codeHash": "0xb1268734ec971791e49212e88455a1e83ef125abf789a4278dea8b5e6c27e4a7"
+    }
+  },
+  "artifactArchive": "privacy/artifacts/23c992a98db9c84c17c5910115e088828cbef6f61505636817c12e9814fa7af1",
+  "status": "verified",
+  "domain": "3921783283555207517042311844485044688320644701004583208018395134405716381915",
+  "verifiedAt": "2026-11-11T14:59:19.961Z",
+  "verifierTest": {
+    "checkedAt": "2026-11-11T14:59:37.220Z",
+    "manifestHash": "23c992a98db9c84c17c5910115e088828cbef6f61505636817c12e9814fa7af1",
+    "method": "eth_call",
+    "validProof": true,
+    "changedContextRejected": true,
+    "verifierGasEstimate": "238536",
+    "scope": "verifier-only; synthetic root; no pool deposit or withdrawal",
+    "proof": {
+      "pi_a": [
+        "21765813113586044272841448382208569582810435313706567109983456571738607983480",
+        "792657431279715978602539053410542956749668073034530171480576771247070099648",
+        "1"
+      ],
+      "pi_b": [
+        [
+          "17573639069928079408545279849425552146152948879015462939827561466746341175618",
+          "19944363587320660358307920270515578940366502264348196830574838938671776980927"
+        ],
+        [
+          "4001234296165841851083310357191458280373303275660921761845126975169899989987",
+          "14241604872091615345887422457147165332587039828532537114543317421583634649260"
+        ],
+        [
+          "1",
+          "0"
+        ]
+      ],
+      "pi_c": [
+        "18457465177331612639754817014161055812811267716331505946487068787270072219216",
+        "10923284832961884923599917287622612426697219131694571560930476499463927991556",
+        "1"
+      ],
+      "protocol": "groth16",
+      "curve": "bn128"
+    },
+    "publicSignals": [
+      "18739499737825412869788431586817906302307714039004717731345790686387311489604",
+      "4383070756904650362752306778290784849914117758871408227099194565803876109417",
+      "3921783283555207517042311844485044688320644701004583208018395134405716381915",
+      "18552006808349023430686245233696473796200564555615354162744093055865901499285"
+    ]
+  }
+}

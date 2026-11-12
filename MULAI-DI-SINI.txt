@@ -1,0 +1,50 @@
+QOZMO — SOURCE CODE LENGKAP
+Versi 8 November 2026 — termasuk logo resmi crypto/RWA terbaru.
+
+1. PERSIAPAN
+Gunakan Node.js 22 atau 24, beserta npm.
+Ekstrak ZIP ini. Semua source berada di folder qozmo-wallet.
+
+2. JALANKAN LOKAL
+Buka Terminal di folder qozmo-wallet, lalu jalankan:
+
+npm ci
+npm run dev
+
+Buka URL yang dicetak oleh Next.js, biasanya http://localhost:3000.
+Landing page: /
+Dashboard: /dashboard/
+
+3. BUILD PRODUKSI
+npm run build
+
+Project menggunakan Next.js static export. Hasil build berada di folder out/.
+Folder out/ dapat dipublikasikan ke hosting statis.
+
+4. VERIFIKASI
+npm run typecheck
+npm test
+
+5. ISI PROJECT
+app/          : landing page, dashboard, styling, dan metadata Next.js
+components/   : komponen UI, animasi, parallax, market, dan dialog wallet
+lib/          : market data, registry logo aset, dan library wallet
+public/       : logo Qozmo, logo resmi aset, gambar mockup, favicon
+scripts/      : script development
+tests/       : tes library wallet
+docs/         : dokumentasi implementasi, validasi, dan sumber aset
+package.json + package-lock.json : dependencies dan versi terkunci
+README.md + konfigurasi Next.js/TypeScript : petunjuk lengkap dan konfigurasi
+
+node_modules, .next, out, dan riwayat Git tidak dimasukkan dalam ZIP.
+Folder tersebut bukan source aplikasi; npm ci dan npm run build membuatnya.
+Konfigurasi hosting privat ChatGPT tidak diperlukan untuk menjalankan project lokal.
+Tidak ada API key atau file .env yang perlu disiapkan untuk versi ini.
+Akses internet diperlukan untuk npm ci dan data pasar/RPC publik.
+
+6. CAKUPAN WALLET
+Wallet EVM, vault lokal terenkripsi, balances, dan transfer native testnet tersedia.
+Qozmo Quantum kini menyediakan smart account WOTS terpisah di Robinhood Testnet:
+create/import read-only, receive, kirim ETH/ERC-20, jurnal kunci sekali pakai,
+retry operasi identik dan backup terenkripsi. Akun EVM biasa tetap ECDSA.
+Lihat docs/qozmo-quantum.md untuk koneksi relay dan batas rilis testnet. Detail lengkap ada di README.md.

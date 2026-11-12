@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "chainId": 46630,
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "denomination": "1000000000000000",
+  "manifestHash": "23c992a98db9c84c17c5910115e088828cbef6f61505636817c12e9814fa7af1",
+  "researchOnly": true,
+  "feeCapUsed": "9033180582051164",
+  "contracts": {
+    "Poseidon2": {
+      "status": "confirmed",
+      "hash": "0x6435b699fce3c51bc0ce5679980402f1a8d7e81a294fd7fe48b63ece6d91122e",
+      "nonce": 18,
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "feeCap": "2599330256072431",
+      "blockNumber": "65",
+      "blockHash": "0x8103e4779ec4cdb44440e25b1cf27c35ffa1b92e102286db44f8c6474064a82f",
+      "gasUsed": "2157126",
+      "codeHash": "0x354b26999e434f8256d168395315e1f51fc15bf49bf2e6bb58fc549bd597e7da"
+    },
+    "Poseidon4": {
+      "status": "confirmed",
+      "hash": "0xb5197ab2a1445b947425f6f105d974e0a80e4662dccac0196e18ded875fe99ad",
+      "nonce": 19,
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "feeCap": "4294041332289336",
+      "blockNumber": "80",
+      "blockHash": "0x73f53416467269c934000ac03896b68d5e71528f3bd6168662a8548ad421c8d9",
+      "gasUsed": "3569887",
+      "codeHash": "0xaa8081e99244f5cd89f2e02e0c4a89ec873ac5eb5583621196c1b138c994024c"
+    },
+    "Groth16Verifier": {
+      "status": "confirmed",
+      "hash": "0xa677b85fa871e9f09d4c0551a23c35a10f10b57b66e247f4eaab1de4dacc79ee",
+      "nonce": 20,
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "feeCap": "496880864998548",
+      "blockNumber": "95",
+      "blockHash": "0xd689e1cc096d4122faa6524aa14d1741fdd60c005dc9418fdc81113dc09451cc",
+      "gasUsed": "405732",
+      "codeHash": "0x21adb0dcebb833982837bd58589e5072981e038addb1330b22fc409586d89ede"
+    },
+    "QozmoPrivacyPool": {
+      "status": "confirmed",
+      "hash": "0xcfd4b98d0c064fd795a5457257d01dee8cdc121d09dbc45c8e6e6d44a7aca41f",
+      "nonce": 21,
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "feeCap": "1642928128690849",
+      "blockNumber": "111",
+      "blockHash": "0x2bb19762fee229df8846f55f7bd6b8c3c5aed4948e68fa4c8fc87738e2d797b6",
+      "gasUsed": "1360773",
+      "codeHash": "0x476b2fdf76d51df9d6688633584a1b553ac71a3831d9491608cba01e663e34c5"
+    }
+  },
+  "artifactArchive": null,
+  "status": "verified",
+  "domain": "14046297788199653496712795027514790052648112697903419809848898194462611468057",
+  "verifiedAt": "2026-11-11T14:45:39.156Z"
+}

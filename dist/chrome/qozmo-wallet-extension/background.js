@@ -1,0 +1,1 @@
+function e(){return chrome.sidePanel.setPanelBehavior({openPanelOnActionClick:!0}).catch(()=>{console.warn("Qozmo could not configure its side panel. Reload the extension and try again.")})}chrome.runtime.onInstalled.addListener(e);chrome.runtime.onStartup.addListener(e);e();

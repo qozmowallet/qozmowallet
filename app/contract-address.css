@@ -1,0 +1,41 @@
+.qca-contract {
+  width: min(100%, 480px);
+  min-width: 0;
+  margin-top: 26px;
+  padding: 17px 18px 13px;
+  border: 1px solid #e3dce9;
+  border-radius: 17px;
+  background: linear-gradient(120deg, #ffffffd9, #f4eff9b3);
+  box-shadow: 0 4px 18px #59436804;
+}
+.qca-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; }
+.qca-heading #qca-title { margin: 0; font-size: 10px; line-height: 1.5; font-weight: 600; letter-spacing: .2px; color: #7b6c88; }
+.qca-network { display: inline-flex; align-items: center; gap: 6px; font-size: 9px; line-height: 1.5; font-weight: 500; color: #718362; }
+.qca-network i { display: block; width: 5px; height: 5px; border-radius: 50%; background: #8ba77d; }
+.qca-address-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.qca-address { flex: 1; min-width: 0; overflow-wrap: anywhere; font: 11px/1.8 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: -.15px; color: #50445c; user-select: all; }
+.qca-copy { flex: 0 0 auto; min-height: 33px; display: inline-flex; justify-content: center; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid #e2d8ec; border-radius: 9px; background: #fff; color: #857095; font-size: 10px; font-weight: 500; transition: color .2s, background .2s, border-color .2s; }
+.qca-copy > svg { width: 13px; height: 13px; }
+.qca-copy:hover { background: #eee6f6; border-color: #cbb8dc; color: #5d456f; }
+.qca-copy.is-copied { color: #5e8667; border-color: #cbded0; background: #f2f8f2; }
+.qca-copy:focus-visible, .qca-bottom a:focus-visible { outline: 2px solid #9477b4; outline-offset: 4px; }
+.qca-bottom { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 7px 16px; margin-top: 11px; }
+.qca-feedback { color: #a094aa; font-size: 8px; line-height: 1.7; }
+.qca-bottom a { display: inline-flex; align-items: center; gap: 7px; color: #8b779c; font-size: 9px; line-height: 1.5; white-space: nowrap; }
+.qca-bottom a:hover { color: #513b63; }
+@media (max-width: 1000px) and (min-width: 761px) {
+  .qca-contract { padding-inline: 14px; }
+  .qca-address { font-size: 10px; }
+  .qca-copy { padding-inline: 8px; }
+  .qca-copy > span { display: none; }
+}
+@media (max-width: 760px) {
+  .qca-contract { width: min(100%, 440px); margin-top: 23px; padding: 16px; }
+  .qca-address-row { gap: 10px; }
+}
+@media (max-width: 440px) {
+  .qca-copy { width: 34px; padding: 0; }
+  .qca-copy > span { display: none; }
+  .qca-address { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .qca-copy { transition: none; } }

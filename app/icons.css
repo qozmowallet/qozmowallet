@@ -1,0 +1,15 @@
+/* Load before the page styles so existing context and mobile sizing wins. */
+.svg-inline--fa:where(.qozmo-icon) {
+  box-sizing: border-box;
+  display: inline-block;
+  width: var(--qozmo-icon-size, 24px);
+  height: var(--qozmo-icon-size, 24px);
+  flex-shrink: 0;
+  vertical-align: -0.125em;
+  overflow: visible;
+}
+
+/* Font Awesome uses filled paths, including its regular outline drawings. */
+svg.qozmo-icon { stroke: none; }
+.merchant-icon.linear > svg { color: #777c9a; }
+.merchant-icon.coffee > svg { color: #9b7659; }

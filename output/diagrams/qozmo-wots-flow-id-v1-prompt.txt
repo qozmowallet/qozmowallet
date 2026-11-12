@@ -1,0 +1,36 @@
+Qozmo WOTS diagram — Indonesian
+Tool: built-in imagegen. The source Qozmo logo was preserved as the reference/edit target. No original brand asset or application code was overwritten.
+Final artifact: qozmo-wots-flow-id-v1.png, 1536 x 1024.
+Checked against the Qozmo implementation: local signed-operation journal precedes submission; validation rotates the next public-key commitment before execution; reverted execution may still consume its key; retry preserves the signed bytes.
+
+COMPOSITION PROMPT
+Use case: infographic-diagram. Edit the supplied official Qozmo stag logo into a finished infographic canvas, preserving the exact logo small in the top-left. A professional clean landscape infographic, 1536x1024, in Indonesian. Matte warm white #f7f7f5, solid white rounded cards, charcoal #171719, lavender #786187 accents. Precise line icons, large readable text, generous spacing, no glass or 3D. Header wordmark "qozmo." plus title "Skema Quantum Wallet". Subtitle "WOTS · Robinhood Testnet · ERC-4337".
+
+A small setup strip above the main diagram:
+"SETUP LOKAL"
+"Recovery phrase → Vault terenkripsi → Alamat smart account"
+"Akun ter-deploy pada transaksi pertama."
+
+Six numbered cards in a clearly connected SNAKE flow: top row 01 left → 02 middle → 03 right. Arrow down from 03 to 04 at bottom-right; bottom row flows 04 right → 05 middle → 06 left. Arrows must be large, precise and unambiguous, never crossing text.
+
+Top row label "DI PERANGKAT ANDA".
+01 card, review/list icon: "Review transaksi" / "Tujuan, aset, jumlah & biaya" / "Konfirmasi password".
+02 card, key icon: "Tanda tangan WOTS" / "Key #n · satu pesan saja" / "Komitmen kunci berikutnya".
+03 card, journal icon: "Simpan riwayat" / "Catat signed operation" / "Sebelum dikirim".
+
+Bottom-right card 04, routing icon, label "RELAY": "Kirim UserOperation" / "Bundler HTTPS → EntryPoint v0.7".
+Bottom-middle card 05, shield/rotate icon, label "ON-CHAIN": "Validasi & rotasi" / "Verifikasi WOTS" / "Aktifkan key #n+1".
+Bottom-left card 06, receipt/magnifier icon, label "ON-CHAIN": "Cek eksekusi" / "Transfer ETH / ERC-20" / "Verifikasi receipt & status".
+
+Below the cards, a single thin loop-arrow annotation: "Transaksi berikutnya: key #n+1". Secondary text: "Kunci berganti. Alamat tetap."
+Bottom note strip: "Pending? Retry byte yang sama." and "Eksekusi gagal tetap dapat mengonsumsi kunci."
+Small footer: "WOTS khusus akun Quantum di Robinhood Testnet."
+
+Technical constraints: local journal saved BEFORE submission. On-chain key rotation occurs during VALIDATION before execution, not after receipt. The private seed never leaves the device. Do not imply every execution succeeds, key reuse, lost-device recovery, mainnet readiness or WOTS on native SOL/BTC. No real seed words, addresses or transaction hashes. Preserve the official supplied logo; never invent another. Exact Indonesian spelling, polished typographic hierarchy, no clutter.
+
+FINAL TARGETED EDIT
+Use case: precise-object-edit.
+Edit only the bottom return-arrow decoration in this Qozmo infographic.
+REMOVE the entire lavender U-shaped connector below the six main cards: remove the vertical stroke descending from card 04, the horizontal stroke across the bottom, and the upward arrowhead pointing toward card 06. That connector misleadingly bypasses validation.
+KEEP the centered lavender rounded pill with the exact text "Transaksi berikutnya: key #n+1", now as a standalone explanatory caption with NO connecting arrows or strokes. Keep "Kunci berganti. Alamat tetap." below it. Restore the plain warm off-white background where the removed arrow used to be.
+Preserve all six cards, numbers, labels, icons, logo, colors, fonts, all Indonesian text, footer, setup strip, framing and canvas dimensions exactly. Preserve the correct main arrows 01→02→03, 03 down to 04, 04 left to 05, and 05 left to 06. Change nothing else.

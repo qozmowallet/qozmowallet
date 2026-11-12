@@ -1,0 +1,33 @@
+.qd-tools-panel { margin-bottom: 22px; padding: 24px; }
+.qd-tools-panel > .qd-panel-heading { padding: 0; margin-bottom: 20px; }
+.qd-tools-panel h2 { margin: 0; font-size: 20px; font-weight: 550; letter-spacing: -.5px; }
+.qd-tools-panel .qd-fine-print { margin: 14px 0; line-height: 1.8; }
+.qd-tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.qd-tools-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 16px 0; }
+.qd-tools-toolbar > input, .qd-tools-toolbar > select, .qd-tools-toolbar select { min-height: 40px; max-width: 100%; border: 1px solid #e1dbe8; border-radius: 10px; background: #faf8fc; color: #5d5269; padding: 10px 13px; font: inherit; font-size: 12px; }
+.qd-tools-toolbar > input { flex: 1; min-width: 150px; }
+.qd-tools-toolbar > label { flex: 1; min-width: 130px; }
+.qd-tools-code { display: block; font-size: 11px; padding: 14px; border: 1px solid #e8e1ef; background: #f5f1f9; border-radius: 12px; overflow-wrap: anywhere; line-height: 1.8; margin: 16px 0; }
+.qd-invoice-row { width: 100%; border: 0; border-bottom: 1px solid #eae5ef; background: none; color: inherit; font: inherit; text-align: left; }
+.qd-invoice-row:hover { background: #f7f3fb; }
+.qd-payment-qr { display: grid; place-items: center; padding: 20px 0; }
+.qd-tools-panel .qd-review dd { overflow-wrap: anywhere; max-width: 75%; }
+.qd-transfer-impact { padding: 15px 16px; border: 1px solid #e1d6ec; background: #f6f1fa; border-radius: 15px; }
+.qd-transfer-impact h3 { font-size: 13px; font-weight: 600; margin: 0 0 10px; }
+.qd-transfer-impact .qd-review { margin: 0; }
+.qd-transfer-impact .qd-fine-print { font-size: 10px; line-height: 1.8; }
+.qr-workbench { width: min(900px, calc(100% - 40px)); margin: 36px auto 80px; font-family: var(--font-sans), sans-serif; }
+.qr-workbench > header { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.qr-workbench > h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.1; font-weight: 500; letter-spacing: -2.4px; margin: 50px 0 20px; }
+.qr-intro { color: #8a7a94; font-size: 14px; line-height: 1.8; margin-bottom: 24px; }
+.qr-workbench .qd-panel { padding: 26px; }
+.qr-tabs { flex-wrap: wrap; margin: 30px 0 20px; gap: 8px; }
+.qr-ack { flex-direction: row !important; align-items: flex-start; gap: 10px !important; line-height: 1.8; }
+.qr-ack input { width: 18px !important; min-height: 18px !important; height: 18px; flex-shrink: 0; margin-top: 4px; }
+.qr-workbench .qd-review dd { overflow-wrap: anywhere; max-width: 75%; font-size: 11px; }
+.qr-workbench input[type=file] { font-size: 12px; }
+@media(max-width:1050px) { .qd-tools-grid { grid-template-columns: 1fr; } }
+@media(max-width:600px) { .qr-workbench > header { flex-direction: column; align-items: flex-start; gap: 12px; }.qd-tools-panel .qd-panel-heading { align-items: flex-start; flex-direction: column; gap: 12px; }.qd-transfer-impact .qd-review > div { gap: 12px; }.qr-workbench .qd-panel { padding: 20px; } }
+
+.qd-qwallet-relay-options { grid-template-columns: repeat(3,minmax(0,1fr)); }
+@media(max-width:1100px) { .qd-qwallet-relay-options { grid-template-columns:1fr; } }

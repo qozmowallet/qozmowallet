@@ -1,0 +1,58 @@
+Qozmo Wallet academic figure — built-in ImageGen
+
+Initial generation prompt:
+
+Use case: scientific-educational / infographic-diagram.
+Create a high-resolution publication-quality academic systems architecture figure for a research paper about Qozmo Wallet. Landscape 16:9, ideally 3840 x 2160, white background, precise thin lines, flat vector-like schematic, typography similar to Helvetica and scientific journal diagrams. This is an engineering figure, not marketing. No photographs, no 3D rendering, no payment card art, no decorative crypto coins, no logos or invented citations. Use dark charcoal labels, muted lavender for client computation, pale blue for network execution, pale amber for clearly isolated research. Keep all text large, sharp and spelled correctly; minimize prose. Generous whitespace and aligned boxes. The figure must remain readable when reduced for a paper.
+
+Title: "Qozmo Wallet: Architecture and Technical Flow"
+Subtitle: "Implemented wallet flows and isolated recovery research"
+
+Use THREE clearly labeled horizontal panels with orthogonal connectors, numbered steps, no crossing arrows.
+
+PANEL (a), largest upper panel, label "(a) Local wallet authorization and network execution".
+A light lavender trust-boundary region labelled "Browser / local device" covers the left half of this panel.
+Within it, a box "Encrypted local vaults" with small second line "PBKDF2-SHA256 + AES-256-GCM". It connects to a central box "Review & revalidate" with a short sublabel "Recipient • chain • balance • nonce • fee".
+From review split into two CLEARLY SEPARATE lanes:
+Upper lane: "EVM account" then "ECDSA signing" then, outside the browser boundary, "RPC broadcast" then "Supported EVM testnets".
+Lower lane (visually emphasized): "Quantum smart account" then "WOTS / Keccak-256" then "Persist signed operation" (small sublabel "Durable journal before submission").
+The lower lane continues across the boundary to "ERC-4337 bundler / gas payer" then "EntryPoint v0.7" then "WOTS validation + key rotation" then "Account execution".
+Above this lower onchain region, a label "Robinhood Testnet • chain 46630".
+At the far right a small "Verified receipt" box returns a thin connector routed BELOW both lanes back to "Activity & pending state" inside the browser. Label the return "Verify execution outcome". Do not connect a mere key rotation directly to successful activity.
+At the base of panel (a), a concise sentence: "Mainnet sending disabled • Imported Quantum accounts remain read-only".
+A subtle label at the browser-to-network boundary: "Private seeds remain local".
+Do NOT imply that recovery, private transaction anonymity, gas sponsorship, or mainnet Quantum sending is active.
+
+PANEL (b), a compact middle panel, label "(b) Read-only data and payment requests".
+Draw four small independent flowlets separated by white space, using the same systematic box style:
+"Kraken" → "Market quotes"
+"Chain RPC" → "Balances & execution checks"
+"Blockscout" → "Indexed history / CSV"
+"ERC-681 request / QR" → "RPC payment verification"
+Under the last flowlet only, small text "Exact native amount • canonical receipt • 3 confirmations".
+These are public-data and payment-verification paths, NOT cryptocurrency bridges. All arrows must point as written. No connections from price quotes to signing secrets.
+
+PANEL (c), bottom panel with an AMBER DASHED border and dashed arrows, label "(c) Recovery workbench — research only".
+A prominent amber status tag: "NO ONCHAIN ACTIVATION".
+Four boxes in one left-to-right chain:
+"Independent offline SLH-DSA key" → "Fresh replacement request" → "Offline approval" → "Local verification".
+Short second-line notes respectively:
+"Encrypted private kit"
+"Account • chain • root • nonce • expiry"
+"Stateless signature"
+"Original request + trusted fingerprint"
+Under the boxes, one concise line: "Not enrolled in legacy contracts; does not unlock restored accounts."
+Important: do not draw ANY arrow from panel (c) into EntryPoint, the deployed account, a transaction executor or an active signing key. This panel is a separate cryptographic research workflow, not a working lost-device recovery mechanism.
+
+Bottom legend: solid arrow "Implemented flow"; dashed amber arrow "Recovery research".
+Bottom academic caption: "Figure 1. Separation of local authorization, network execution, public-data services, and recovery research in Qozmo Wallet."
+Require accurate spelling of Qozmo, WOTS, Keccak-256, ERC-4337, EntryPoint, SLH-DSA, PBKDF2, AES-256-GCM, ERC-681. Avoid tiny paragraphs, speculative performance numbers, security certification claims, and connections that would suggest receipt success merely from key consumption.
+
+Targeted correction prompt:
+
+Edit this existing academic Qozmo Wallet architecture figure. Preserve its content, typography, three-panel layout, resolution, colors and all labels except the following precisely targeted technical corrections:
+1. In panel (a), the blue "Robinhood Testnet • chain 46630" ONCHAIN region must begin AFTER the "ERC-4337 bundler / gas payer" box, between that box and the "EntryPoint v0.7" box. The bundler / gas payer is OFFCHAIN. Keep that box outside the blue onchain boundary. The blue region should enclose only EntryPoint, WOTS validation + key rotation, and Account execution. Keep the chain label above that adjusted onchain region without overlap.
+2. Make the receipt return path unambiguous. Account execution must point right to Verified receipt. Verified receipt must then send its OWN separate orthogonal return arrow left to Activity & pending state, labeled "Verify execution outcome". Do not use a shared fork that allows Account execution to reach Activity without first going through Verified receipt. Route the return connector through the available clear bottom area in panel (a); no overlapping box text.
+3. Correct the step numbering after Account execution: "Verified receipt" is step 10, and "Activity & pending state" is step 11.
+Do not alter panel (b) or (c), the research-only status, any spellings, or the caption. Keep a clean paper-quality result.
+

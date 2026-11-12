@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "Qozmo Wallet",
+  "version": "0.7.0",
+  "version_name": "0.7.0 Multichain Testnets",
+  "description": "Qozmo testnet wallet: Quantum WOTS on Robinhood, native Solana Devnet and Bitcoin Signet, with encrypted backups and transfer reviews.",
+  "minimum_chrome_version": "137",
+  "action": {
+    "default_title": "Open Qozmo side panel",
+    "default_icon": {
+      "32": "brand/qozmo-icon-32.png",
+      "128": "brand/qozmo-icon-192.png"
+    }
+  },
+  "icons": {
+    "32": "brand/qozmo-icon-32.png",
+    "128": "brand/qozmo-icon-192.png"
+  },
+  "host_permissions": [
+    "https://api.devnet.solana.com/*",
+    "https://mempool.space/*",
+    "https://rpc.mainnet.chain.robinhood.com/*",
+    "https://rpc.testnet.chain.robinhood.com/*",
+    "https://ethereum.reth.rs/*",
+    "https://mainnet.base.org/*",
+    "https://arb1.arbitrum.io/*",
+    "https://mainnet.optimism.io/*",
+    "https://polygon.drpc.org/*",
+    "https://11155111.rpc.thirdweb.com/*",
+    "https://sepolia.base.org/*",
+    "https://api.kraken.com/*",
+    "https://api.llama.fi/*",
+    "https://eth.blockscout.com/*",
+    "https://base.blockscout.com/*",
+    "https://arbitrum.blockscout.com/*",
+    "https://optimism.blockscout.com/*",
+    "https://polygon.blockscout.com/*",
+    "https://eth-sepolia.blockscout.com/*",
+    "https://base-sepolia.blockscout.com/*",
+    "https://robinhoodchain.blockscout.com/*",
+    "https://explorer.testnet.chain.robinhood.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-src 'none'; frame-ancestors 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https: wss://ws.kraken.com;"
+  },
+  "permissions": [
+    "sidePanel"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}

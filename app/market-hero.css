@@ -1,0 +1,79 @@
+/* The original photographic asset is 1086×1448. Its screen aperture is
+   x171 y120 w504 h1040. Keep screen, hand, bezel, tilt, float, and parallax
+   together; independently moving the UI would break the mockup alignment. */
+.market-art {
+  --phone-scale: .60;
+  isolation: isolate;
+  min-width: 0;
+  height: 750px;
+  margin-top: 0;
+  scroll-margin-top: 28px;
+}
+.phone-depth-layer { position: absolute; inset: 0; pointer-events: none; }
+.phone-depth-glow { z-index: 0; }
+.phone-depth-handset { z-index: 2; }
+.phone-hero-glow {
+  position: absolute;
+  inset: 30px -70px 20px -25px;
+  background: radial-gradient(ellipse at 45% 35%, #d8e8ed78, transparent 62%), radial-gradient(ellipse at 65% 74%, #ead8e75c, transparent 61%);
+  filter: blur(35px);
+  opacity: .5;
+  pointer-events: none;
+}
+.phone-handset {
+  position: absolute;
+  width: calc(1086px * var(--phone-scale));
+  height: calc(1448px * var(--phone-scale));
+  top: -35px;
+  left: calc(50% - 423px * var(--phone-scale));
+  pointer-events: none;
+}
+.phone-angle { position: relative; width: 100%; height: 100%; transform: rotate(-6deg); transform-origin: 38.95% 44.2%; }
+.phone-canvas { position: absolute; inset: 0 auto auto 0; width: 1086px; height: 1448px; transform: scale(var(--phone-scale)); transform-origin: 0 0; }
+.phone-hand-photo { position: absolute; inset: 0; width: 1086px; height: 1448px; max-width: none; pointer-events: none; user-select: none; }
+.phone-screen {
+  position: absolute;
+  z-index: 1;
+  left: 171px;
+  top: 120px;
+  width: 504px;
+  height: 1040px;
+  border-radius: 55px;
+  overflow: hidden;
+  background: #fbfafc;
+  isolation: isolate;
+  pointer-events: auto;
+}
+.phone-screen-fit { width: 360px; height: 743px; transform: scale(1.4); transform-origin: 0 0; }
+/* Keep focus outlines inside the clipped glass aperture. */
+.phone-screen :is(button,a):focus-visible { outline: 2px solid #9270bb; outline-offset: 2px; }
+[data-motion="on"] .phone-hero-glow { animation: qozmo-glow-breathe 9s ease-in-out infinite; }
+
+@media (min-width: 1500px) {
+  .market-art { --phone-scale: .65; height: 820px; }
+  .phone-handset { top: -42px; }
+}
+@media (max-width: 1199px) {
+  .market-art { --phone-scale: .55; height: 700px; }
+  .phone-handset { top: -30px; }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  .market-art { --phone-scale: .51; height: 650px; }
+  .phone-angle { transform: rotate(-6deg); }
+  .phone-handset { top: -26px; }
+}
+@media (max-width: 760px) {
+  .market-art { --phone-scale: .60; width: min(445px, 100%); height: 780px; margin: 30px auto 0; }
+  .phone-handset { top: -35px; }
+  .phone-angle { transform: rotate(-4deg); }
+  .phone-hero-glow { inset: -5px -80px 0 -45px; }
+}
+@media (max-width: 389px) {
+  .market-art { --phone-scale: .55; height: 710px; margin-top: 27px; }
+  .phone-handset { top: -30px; }
+  .phone-angle { transform: rotate(-3deg); }
+}
+[data-motion="off"] .phone-hero-glow { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .phone-hero-glow { animation: none !important; }
+}

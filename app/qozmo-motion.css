@@ -1,0 +1,132 @@
+/* Qozmo's decorative motion complements the licensed Magic UI components.
+   Individual translate / rotate properties keep each panel's base transform. */
+
+[data-motion="on"] .qozmo-floating-panel {
+  animation: qozmo-panel-float var(--float-duration, 7s) ease-in-out var(--float-delay, 0s) infinite;
+  animation-play-state: paused;
+}
+[data-motion="on"] .qozmo-floating-panel[data-floating-active="true"] {
+  animation-play-state: running;
+}
+[data-motion="on"] .qozmo-floating-panel:hover,
+[data-motion="on"] .qozmo-floating-panel:focus-within {
+  animation-play-state: paused;
+}
+@keyframes qozmo-panel-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 calc(var(--float-distance, 7px) * -1); }
+}
+
+[data-motion="on"] .hero .gradient-text {
+  background-size: 180% 100%;
+  animation: qozmo-gradient-drift 10s ease-in-out infinite;
+}
+@keyframes qozmo-gradient-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+[data-motion="on"] .art-glow {
+  animation: qozmo-glow-breathe 8s ease-in-out infinite;
+}
+@keyframes qozmo-glow-breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+[data-motion="on"] .hero-arrow {
+  animation: qozmo-arrow-drift 7.5s ease-in-out 0.7s infinite;
+}
+@keyframes qozmo-arrow-drift {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -5px; rotate: -3deg; }
+}
+[data-motion="on"] :is(.art-star, .orbit-star, .faq-star, .closing-star) {
+  animation: qozmo-star-drift 9s ease-in-out infinite;
+}
+[data-motion="on"] .orbit-star { animation-delay: -2.5s; }
+[data-motion="on"] .faq-star { animation-delay: -5s; }
+[data-motion="on"] .closing-star { animation-delay: -7s; }
+@keyframes qozmo-star-drift {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -5px; rotate: 7deg; }
+}
+
+/* The existing ::after grain stays intact above this occasional soft highlight. */
+.payment-card::before {
+  content: "";
+  position: absolute;
+  top: -35%;
+  left: -50%;
+  width: 32%;
+  height: 170%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 25%), transparent);
+  rotate: 18deg;
+  opacity: 0;
+  pointer-events: none;
+}
+[data-motion="on"] .payment-card::before {
+  animation: qozmo-card-gloss 11s ease-in-out 2s infinite;
+}
+[data-motion="on"] .payment-card-mini::before { animation-delay: 4.5s; }
+@keyframes qozmo-card-gloss {
+  0%, 65% { translate: -100% 0; opacity: 0; }
+  70% { opacity: 0.8; }
+  88% { translate: 600% 0; opacity: 0; }
+  100% { translate: 600% 0; opacity: 0; }
+}
+
+[data-motion="on"] :is(.text-link, .footer-bottom > a) > svg {
+  transition: translate 220ms ease;
+}
+[data-motion="on"] :is(.text-link, .footer-bottom > a):hover > svg {
+  translate: 2px 0;
+}
+[data-motion="on"] .hero-scroll:focus-visible svg { translate: 0 3px; }
+
+/* These reveal wrappers retain the existing grid/flex sizing at all breakpoints. */
+.hero-art-reveal { width: 100%; min-width: 0; }
+.feature-grid > .mui-blur-fade { min-width: 0; height: 100%; }
+.feature-grid > .mui-blur-fade > .feature-card { height: 100%; }
+.how-layout > .mui-blur-fade { min-width: 0; width: 100%; }
+.faq-section > .mui-blur-fade { min-width: 0; }
+
+.footer-controls { display: flex; align-items: center; gap: 14px; }
+.footer-controls > a { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .footer-controls { margin-left: auto; gap: 9px; }
+}
+
+/* Respect the device reduced-motion preference with a still composition. */
+[data-motion="off"] :is(.qozmo-floating-panel, .hero-arrow, .art-star, .orbit-star, .faq-star, .closing-star) {
+  animation: none !important;
+  translate: none;
+  rotate: none;
+}
+[data-motion="off"] :is(.hero .gradient-text, .art-glow),
+[data-motion="off"] .payment-card::before { animation: none !important; }
+[data-motion="off"] .hero .gradient-text { background-size: 100% 100%; }
+[data-motion="off"] .payment-card::before { opacity: 0; }
+[data-motion="off"] .mui-blur-fade {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qozmo-floating-panel,
+  .hero-arrow,
+  .art-star,
+  .orbit-star,
+  .faq-star,
+  .closing-star {
+    animation: none !important;
+    translate: none !important;
+    rotate: none !important;
+  }
+  .hero .gradient-text, .art-glow, .payment-card::before { animation: none !important; }
+  .hero .gradient-text { background-size: 100% 100% !important; }
+  .payment-card::before { opacity: 0 !important; }
+  .mui-blur-fade { opacity: 1 !important; filter: none !important; transform: none !important; }
+}

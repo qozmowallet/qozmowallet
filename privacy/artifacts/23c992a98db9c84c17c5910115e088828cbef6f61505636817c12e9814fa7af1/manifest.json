@@ -1,0 +1,25 @@
+{
+  "localResearchOnly": true,
+  "solc": "0.8.38+commit.1835d247.Emscripten.clang",
+  "hashes": {
+    "privacy/circuits/withdraw.circom": "1e7d395341049741471526f9b07e7a2dee8f569bb589b0180bf558eedd24d9fa",
+    "privacy/contracts/QozmoPrivacyPool.sol": "1106160b743a3b540fab9b38b4bbfe7dbb3072bebc457950cdac9da4a5b2921b",
+    "privacy/test/TestRecipients.sol": "7ae7123ba3f2de69a9ad06908c4b8ac2c1cb50c26a8148c6ac5f96c337d61872",
+    "lib/wallet/privacy/note.ts": "88e59440ab9b33e6683311320ea4d3bddbfe81b4e44eb7c1a7493c1e991703c7",
+    "lib/wallet/privacy/transactions.ts": "fb4259258bb5d92869068725ca53529a5b72852f4b8d81285b761e6ba1add9e4",
+    "package-lock.json": "e175e875107b9875c354928be33572babd137771038c91445ea4edabb8901972",
+    "scripts/privacy-setup.mjs": "948a0f39cd97014ea5d2986ce2e79a4e930cd763e9f6386287c3b8663498daef",
+    "scripts/privacy-runtime.mjs": "46bec6a4b46e497260b7cc90694eed6006d08a45e26f4127e3945e320a140666",
+    "scripts/privacy-deploy.mjs": "252a2f21f332743862e9a0aaa9065a556d2068c757fc48ae7c72b1bb8e6f45e2",
+    "scripts/privacy-verify.mjs": "ee54229db7261bc0b2faae63302476c7331e3302597ed774d2d5ecf93e189171",
+    "scripts/privacy-e2e.mjs": "e7f0ae1ab6b6c17f021502a04e6a27a862910b4c6304e6549f9026559e5cb210"
+  },
+  "artifactHashes": {
+    "contracts.json": "77ea9a14f0bfb2b476fe3641cee5ee41c03d19a238b103adbf13025d9c11d6fe",
+    "verification-key.json": "5be72d1ffc07c3ed89162ec679ef7117b5abef4c97bf37cf953be6079f4628b1",
+    "WithdrawVerifier.sol": "1cdb400c6d220ab80ceafdfbb3e0d167959ec53e5be6c8fd459921bd96f5f3cb",
+    "withdraw.zkey": "bc1d048ce42c486cf01dd7309bff786411079e22ec850e62a9c3d57b481010b3",
+    "withdraw_js/withdraw.wasm": "4e04efdaec5491c6d1437d053f6316caf3ae685c582bb25963e3a8045ab27785",
+    "withdraw.r1cs": "aab70893cee9989ff8b7d03d0df6bff2b13ad9aaab2703890e9b92c78ad4e1d1"
+  }
+}

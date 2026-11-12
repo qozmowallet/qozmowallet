@@ -1,0 +1,25 @@
+{
+  "source": "/Users/imrybrndo/Desktop/ethereum/winternitz/sdk/src",
+  "copiedAt": "2026-11-08",
+  "adaptations": [
+    "ESM .js package subpaths for installed noble/scure versions; protocol constants and derivations unchanged"
+  ],
+  "sourceSha256": {
+    "operation-receipt.ts": "b9bb34d2796bcf670b35765d0dc7d0e0c140b1df7fe17f8ed0e4ec6ca085bbeb",
+    "release-policy.ts": "9ad42a43919bc21b867558452549cef5d01ec04054db8544e72877e38ee36f0c",
+    "mnemonic.ts": "5c7b2bfbd64508ee73517d1088c3d7ac2fd9fb2d1e0d969f88a867f4991b43a9",
+    "vault.ts": "1c697aa614716ac78a8751d1344204eb2947b92ebc438b398689207775eac226",
+    "recovery-backup.ts": "a4ac6b48a8898fa3f92eb6d1712f875be66545ae14c1d722c25348da03f6b2ad",
+    "wots.ts": "ab04fea3912ced2cd20c9e73526833732d7bc0804eadebf9427f5e731e4a852f",
+    "journal.ts": "d89b734992752983f39631021c1a58510deea1e5cda547fec38c647570966562",
+    "account.ts": "340ada271a5a1ad7ad02b701d6fe15476caac259a85fbe0be73c53d82b11024a",
+    "submitters.ts": "c5cb7dcc7f5ecb28d83b40b5b6587317f1883c97bdce463b5c0b28178c873aea",
+    "wallet.ts": "8e74c13004b03249c785cede08bc0ff82b1c5401f7b6aabb7c44ed45d0233458",
+    "readiness.ts": "457fb539ddc82b92c5696cc15f2e2ba7a6ae11df516c1a4fd27a9579f4744a83",
+    "deployments.ts": "9aa02d956dc3b0d22b485cfb4cc9111cb004641b6abb78bfaf5e6c68749e34ee",
+    "transfer-preview.ts": "a1281301f46c93d375530d6a8268c4a8fa7c1bb60eeb592b988624391f5f7984",
+    "l1-fee.ts": "c6044a7fa428604271581ce7656cce4af946edcb7546c93f1cdac8e7bf98e266"
+  },
+  "sourceRevision": "42721b4f50ef6e48291a8de862fa76e9b570d42d",
+  "note": "Source worktree bytes are identified by the individual hashes; technical wire-format domains are intentionally preserved for compatibility."
+}

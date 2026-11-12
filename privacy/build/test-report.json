@@ -1,0 +1,20 @@
+{
+  "completed": true,
+  "scope": "isolated-anvil-local-only",
+  "chainId": 31337,
+  "manifestHash": "23c992a98db9c84c17c5910115e088828cbef6f61505636817c12e9814fa7af1",
+  "generatedAt": "2026-11-11T14:45:32.908Z",
+  "localResearchSetup": true,
+  "withdrawalGas": "358928",
+  "checks": [
+    "SDK and Solidity pool domains agree",
+    "exact denomination, duplicate commitment and field checks",
+    "real proof rejects modified recipient, fee, domain, root, sender and proof",
+    "historical root payout, relayer fee and double-spend prevention",
+    "failed recipient payment rolls back nullifier",
+    "callback reentrancy blocked; unspent deposits remain accounted for",
+    "invalid Merkle membership fails circuit witness generation",
+    "existing pool refuses operations after the chain ID changes",
+    "testnet deployment preview, four real deployments, receipt/code checks, resume and deployed verifier proof"
+  ]
+}

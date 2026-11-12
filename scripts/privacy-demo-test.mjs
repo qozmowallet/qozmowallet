@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { createServer } from 'node:net';
+import path from 'node:path';
+import os from 'node:os';
+import { createPublicClient, http, parseEther, parseGwei } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
+import { loadPrivacyArtifacts } from './privacy-runtime.mjs';
+import { deployPrivacy, testnetChain } from './privacy-deploy.mjs';
+import { demoBackupPassword, runPrivacyDemo } from './privacy-demo.mjs';
+import { parseDemoEvidence, verifyDemoEvidence } from '../lib/wallet/privacy/demo-evidence.ts';
+import { decryptPrivacyNote } from '../lib/wallet/privacy/backup.ts';
+import { noteCommitment } from '../lib/wallet/privacy/note.ts';
+
+// Public Anvil development key. Never load .env or the user's signer in this test.
+const fixtureKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80';
+const account = privateKeyToAccount(fixtureKey);
+const directory = await mkdtemp(path.join(os.tmpdir(), 'qozmo-privacy-demo-'));
+const server = createServer();
+await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+const port = server.address().port;
+await new Promise(resolve => server.close(resolve));
+const rpc = `http://127.0.0.1:${port}`;
+const node = spawn('anvil', ['--host', '127.0.0.1', '--port', String(port), '--chain-id', '46630', '--block-time', '0.1', '--silent'], { stdio: 'ignore' });
+let nodeError;
+node.on('error', error => { nodeError = error; });
+try {
+  const client = createPublicClient({ chain: testnetChain(rpc), transport: http(rpc, { retryCount: 0 }), pollingInterval: 100 });
+  let ready = false;
+  for (let i = 0; i < 100; i++) { if (nodeError) throw nodeError; try { if (await client.getChainId() === 46630) { ready = true; break; } } catch {} await new Promise(resolve => setTimeout(resolve, 100)); }
+  assert.ok(ready, 'Anvil failed to start.');
+  const build = await loadPrivacyArtifacts();
+  const deployment = await deployPrivacy({ account, build, rpc, broadcast: true, journalPath: path.join(directory, 'deploy.json'), archive: false, budget: parseEther('0.05'), maxFeePerGas: parseGwei('3'), log: () => {} });
+  const pins = { chainId: 46630, pool: deployment.contracts.QozmoPrivacyPool.address, verifier: deployment.contracts.Groth16Verifier.address, denomination: deployment.denomination, domain: deployment.domain, deployBlock: BigInt(deployment.contracts.QozmoPrivacyPool.blockNumber), poolCodeHash: deployment.contracts.QozmoPrivacyPool.codeHash, verifierCodeHash: deployment.contracts.Groth16Verifier.codeHash, manifestHash: build.manifestHash };
+  const config = { account, privateKey: fixtureKey, build, deployment, rpc, statePath: path.join(directory, 'demo.json'), evidencePath: path.join(directory, 'evidence.json'), pins, feeBudget: parseEther('0.01'), maxFeePerGas: parseGwei('3'), log: () => {} };
+  const nonce = await client.getTransactionCount({ address: account.address });
+  await runPrivacyDemo(config);
+  assert.equal(await client.getTransactionCount({ address: account.address }), nonce);
+  const before = await client.getBalance({ address: account.address });
+  const evidence = await runPrivacyDemo({ ...config, broadcast: true });
+  assert.equal(evidence.status, 'complete');
+  assert.equal(await client.getTransactionCount({ address: account.address }), nonce + 2);
+  assert.equal(await client.getBalance({ address: pins.pool }), 0n);
+  assert.equal(before - await client.getBalance({ address: account.address }), BigInt(evidence.gasFeeWei));
+  assert.equal((await verifyDemoEvidence(evidence, client, undefined, pins)).nullifierSpent, true);
+  console.log('PASS exact deposit, real proof, withdrawal, zero pool balance and gas-only wallet cost');
+  const state = JSON.parse(await readFile(config.statePath, 'utf8'));
+  assert.equal(state.replayRejected, true);
+  const password = demoBackupPassword(fixtureKey, pins.pool, build.manifestHash);
+  const note = await decryptPrivacyNote(JSON.stringify(state.encryptedNote), password);
+  assert.equal(noteCommitment(note).toString(), evidence.commitment);
+  const publicText = await readFile(config.evidencePath, 'utf8');
+  for (const word of ['"secret"', '"nullifier"', '"encryptedNote"', fixtureKey, password]) assert.ok(!publicText.includes(word));
+  assert.ok(!JSON.stringify(state).includes('"secret"'));
+  console.log('PASS encrypted recovery note persisted privately; public evidence contains no signing or note secrets');
+  await runPrivacyDemo({ ...config, broadcast: true });
+  assert.equal(await client.getTransactionCount({ address: account.address }), nonce + 2);
+  console.log('PASS completed demo resumes without another deposit or withdrawal');
+  assert.throws(() => parseDemoEvidence({ ...evidence, publicSignals: ['0', ...evidence.publicSignals.slice(1)] }, pins));
+  assert.throws(() => parseDemoEvidence({ ...evidence, gasFeeWei: '-1' }, pins));
+  await assert.rejects(verifyDemoEvidence(evidence, { getChainId: async () => 1 }, undefined, pins), /Wrong chain/);
+  await assert.rejects(verifyDemoEvidence({ ...evidence, withdrawal: { ...evidence.withdrawal, blockHash: `0x${'aa'.repeat(32)}` } }, client, undefined, pins), /canonical/);
+  await assert.rejects(verifyDemoEvidence({ ...evidence, gasFeeWei: '1' }, client, undefined, pins), /fee/);
+  console.log('PASS dashboard verification rejects wrong network, changed proof context, orphaned receipt and forged fee');
+} finally { node.kill('SIGTERM'); await rm(directory, { recursive: true, force: true }); }

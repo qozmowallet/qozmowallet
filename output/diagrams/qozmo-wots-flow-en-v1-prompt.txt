@@ -1,0 +1,64 @@
+Qozmo WOTS flow — English localization
+Tool: built-in imagegen, image edit / text-localization.
+Source: qozmo-wots-flow-id-v1.png. Original Indonesian version preserved.
+Final artifact: qozmo-wots-flow-en-v1.png, 1536 x 1024.
+Checked: all captions are English; arrows preserve 01 → 02 → 03 → 04 → 05 → 06; journal precedes broadcast, validation/rotation precedes execution, and the failed-execution key-consumption note is retained.
+
+EXACT EDIT PROMPT
+Use case: text-localization.
+Edit target: the supplied Qozmo Quantum WOTS diagram.
+Translate ALL Indonesian text into English. Preserve the exact official Qozmo stag logo and "qozmo." wordmark, overall design, warm white background, solid rounded cards, lavender accents, line icons, six numbered steps, canvas dimensions and main arrow directions. Do not add or remove steps. No bottom return connector: the next-transaction pill must remain a standalone caption. Make only the typography adjustments necessary for English copy to fit cleanly. No clipped, overlapping or tiny text.
+
+Use these exact English replacements, with the same semantic placement:
+Header title: "Quantum Wallet Flow"
+Header subtitle unchanged: "WOTS · Robinhood Testnet · ERC-4337"
+
+Setup heading: "LOCAL SETUP"
+Setup flow: "Recovery phrase → Encrypted vault → Smart account address"
+Setup annotation: "Account deploys on its first transaction."
+
+Top row group label: "ON YOUR DEVICE"
+
+Card 01:
+"Review transaction"
+"Recipient, asset, amount & fees"
+"Confirm password"
+
+Card 02:
+"Sign with WOTS"
+"Key #n · one message only"
+"Commit to the next key"
+
+Card 03:
+"Save signing state"
+"Record the signed operation"
+"Before broadcasting"
+
+Card 04 bottom-right, keep badge "RELAY":
+"Submit UserOperation"
+"HTTPS bundler →"
+"EntryPoint v0.7"
+
+Card 05 bottom-middle, keep badge "ON-CHAIN":
+"Validate & rotate"
+"Verify WOTS"
+"Activate key #n+1"
+
+Card 06 bottom-left, keep badge "ON-CHAIN":
+"Check execution"
+"ETH / ERC-20 transfer"
+"Verify receipt & status"
+
+Standalone bottom pill:
+"Next transaction: key #n+1"
+Italic tagline:
+"New key. Same address."
+
+Footer note 1:
+"Pending? Retry the exact same bytes."
+Footer note 2:
+"Failed execution may still consume a key."
+Final footer:
+"WOTS is exclusive to Qozmo Quantum on Robinhood Testnet."
+
+Critical invariants: keep the main flow 01→02→03, then down to 04, then left to 05, then left to 06. The signed operation is recorded BEFORE broadcast. Key rotation is part of validation BEFORE execution. Do not create any arrow bypassing card 05. Preserve the key index notation #n and #n+1 exactly. Do not imply every execution succeeds or that the account address changes. No Indonesian text should remain. No unrelated changes.
