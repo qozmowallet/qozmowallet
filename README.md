@@ -1,197 +1,479 @@
-# Qozmo Wallet
+<p align="center">
+  <img src="public/brand/qozmo-icon-192.png" alt="Qozmo emblem" width="88" />
+</p>
 
-## Chrome extension
+<h1 align="center">Qozmo Wallet</h1>
 
-Download the early-access Chrome extension from `/extension/` on the landing site, or build it with `npm run build:extension`. The ZIP is generated at `public/downloads/qozmo-wallet-chrome.zip`; the directly loadable folder is `dist/chrome/qozmo-wallet-extension`. Install with Chrome's **Developer mode → Load unpacked**. The toolbar opens a dedicated 400 × 600 Quantum wallet popup with Wallet, Receive, Send, Activity and Settings. Setup uses a dedicated Quantum tab; the EVM dashboard stays available from Settings. This is a bundled local wallet; Chrome Web Store publication and dapp provider injection are not included. Website vault data is separate and Quantum imports remain read-only. See the [installation, permissions and update guide](docs/chrome-extension.md).
+<p align="center">
+  Hash-based account authorization. Local zero-knowledge proofs. One shared wallet workspace.
+</p>
 
-The latest local additions are the **Recovery** workspace and standalone `/recovery/` research tools, explorer-indexed history with CSV export, native payment requests with receipt verification, expanded transfer reviews, and a separately operated Qozmo bundler gateway. Read [implementation, setup and limits](docs/recovery-and-product-tools.md). The offline recovery artifacts do **not** activate lost-device spending recovery on existing accounts. Their imports remain read-only.
+<p align="center">
+  <a href="#system-architecture">Architecture</a> ·
+  <a href="#post-quantum-account-authorization">Quantum authorization</a> ·
+  <a href="#privacy-ring">Privacy Ring</a> ·
+  <a href="#getting-started">Get started</a> ·
+  <a href="#validation-and-evidence">Validation</a>
+</p>
 
-A responsive wallet landing page and DeFi wallet workspace built with **Next.js App Router, React, TypeScript, and CSS**. The visual identity follows the supplied reference: warm white, fading grids, soft pastel gradients, oversized typography, and a photographic hand-held phone with a live wallet interface.
+> **Early access · Testnet research · Unaudited**
+>
+> Qozmo explores post-quantum account authorization with a WOTS/Keccak-256 smart account on Robinhood Testnet. Privacy Ring adds a separate Groth16-based privacy research layer. Hash-based account authorization does not make the proof system, network, browser, or device quantum-safe. Use test assets only.
 
-## Run locally
+## Contents
 
-Use Node.js 22 or 24.
+- [Overview](#overview)
+- [System architecture](#system-architecture)
+- [Post-quantum account authorization](#post-quantum-account-authorization)
+- [Privacy Ring](#privacy-ring)
+- [Backup and recovery](#backup-and-recovery)
+- [Networks and deployed contracts](#networks-and-deployed-contracts)
+- [Getting started](#getting-started)
+- [Validation and evidence](#validation-and-evidence)
+- [Security model and current limits](#security-model-and-current-limits)
+- [Repository structure](#repository-structure)
+- [Documentation](#documentation)
+- [Attribution and references](#attribution-and-references)
 
-```bash
-npm install
-npm run dev
+## Overview
+
+Qozmo combines a local encrypted wallet, hash-based smart-account authorization, and a browser-based privacy research interface. The website uses **one Qozmo smart account per user**: Wallet, Quantum, Privacy Ring, Activity, and Backup Center share its address, password, and unlocked session.
+
+Public funds belong to the user's smart account. Deposited privacy funds belong to the shared pool contract and are controlled through note secrets and proofs. The pool is protocol infrastructure, not a second user wallet.
+
+| Area | Current implementation |
+| --- | --- |
+| Shared website account | Deterministic ERC-4337 smart account with WOTS authorization on Robinhood Testnet |
+| Public transfers | Reviewed test ETH and manually checked ERC-20 transfers |
+| Privacy Ring | Fixed-denomination deposits, local proof generation, and withdrawals to the same Qozmo account |
+| Backup Center | One encrypted file containing the account archive, known signing history, and encrypted privacy notes |
+| Activity | Signed-call classification, execution checks, account fees, confirmations, and explorer links |
+| Connections | Qozmo gateway, compatible HTTPS bundler, or an explicitly connected browser gas payer |
+| Chrome extension | Manifest V3 side panel with Robinhood Quantum, native Solana Devnet, and Bitcoin Signet adapters |
+| Markets and assets | Live crypto/RWA quotes, historical prices, supported onchain holdings, and DeFi discovery |
+| Recovery workbench | Separate offline SLH-DSA research tools; no lost-device spending activation |
+
+The **Mainnet/Testnet → Chain** picker controls the network being viewed. It does not bridge funds or activate signing on another chain. Previous EOA vaults remain available for encrypted export in Settings; assets are not migrated automatically.
+
+## System architecture
+
+```mermaid
+flowchart TB
+    subgraph Browser["Qozmo website · browser origin"]
+        UI["Dashboard"] --> Session["Shared account session"]
+        Vault["Encrypted account vault"] --> Session
+        Session --> Transfers["Public transfer builder"]
+        Session --> Privacy["Encrypted notes and local ZK prover"]
+        Transfers --> Signer["Review, simulation and WOTS signer"]
+        Privacy --> Signer
+        Signer -->|"Persist signed operation"| Journal["Write-ahead key journal"]
+        Backup["Backup Center"] --> Vault
+        Backup --> Journal
+        Backup --> Privacy
+    end
+    Signer -->|"After durable journal save"| Relay["Bundler or browser gas payer"]
+    Relay --> EntryPoint["EntryPoint v0.7"]
+    EntryPoint --> Account["User's Qozmo smart account"]
+    Account --> Assets["ETH and ERC-20 calls"]
+    Account --> Pool["Shared Privacy Ring pool"]
+    Pool --> Verifier["Groth16 verifier"]
 ```
 
-Open the local URL printed by Next.js (normally http://localhost:3000).
+### Responsibilities and data boundaries
 
-## Production
+| Component | Responsibility |
+| --- | --- |
+| Browser application | Generates secrets, encrypts local data, prepares calls, reviews transactions, and signs approved operations |
+| Local journal | Retains every known exposed one-time key and its exact signed operation before submission |
+| Local prover worker | Builds and verifies a withdrawal proof using the private witness and pinned public proving artifacts |
+| RPC and indexers | Supply public chain state, receipts, deposit events, balances, and indexed history |
+| Bundler / gas payer | Relays a signed UserOperation through EntryPoint; does not receive the wallet seed or vault password |
+| EntryPoint and smart account | Validate account authorization and execute the requested calls |
+| Privacy pool and verifier | Maintain commitments, reject spent nullifiers, verify withdrawal proofs, and release the fixed denomination |
+| Optional Qozmo gateway | Proxies restricted bundler/history requests; upstream provider credentials remain server-side |
+
+Seeds, note secrets, and wallet passwords are processed locally in the intended application flow. Public addresses, calldata, signatures, proofs, and transaction metadata are visible to the selected RPC or relay. The gateway is not a custody service or a gas sponsor.
+
+Website and extension installations have different storage origins. Extension contexts share their encrypted records within that extension origin, but do not share an in-memory unlock session. Native SOL/BTC accounts use their own derivation and authorization; WOTS applies to the Robinhood smart account.
+
+## Post-quantum account authorization
+
+### What “quantum” means in this implementation
+
+Qozmo's smart-account authorization uses **Winternitz one-time signatures (WOTS) with Keccak-256**. It is a custom hash-based construction preserved from the integrated account core. This repository makes no NIST certification claim for that construction and does not claim end-to-end post-quantum security.
+
+| Parameter | Implementation |
+| --- | --- |
+| Seed | 32 random bytes, represented by a 24-word BIP-39 mnemonic |
+| Hash function | Keccak-256 |
+| Winternitz parameter | `w = 16` |
+| Hash chains per key | 67: 64 message digits and 3 checksum digits |
+| WOTS signature | 2,144 bytes |
+| Normal UserOperation signature | 32-byte successor key commitment + WOTS signature = 2,176 bytes |
+| Account transport | ERC-4337 UserOperation, EntryPoint v0.7 |
+
+See the actual [WOTS implementation](lib/wallet/quantum-sdk/wots.ts) and [account encoding](lib/wallet/quantum-sdk/account.ts).
+
+### Account creation and unlocking
+
+1. Generate a fresh seed with browser cryptographic randomness and confirm the requested recovery words.
+2. Derive the initial signing and recovery key commitments. Predict the stable smart-account address from the pinned factory, implementation, commitments, and account salt.
+3. Encrypt the seed locally with **PBKDF2-SHA256, 600,000 iterations, and AES-256-GCM**. Account identity, network, commitments, salt, and restored/read-only policy are authenticated.
+4. On unlock, decrypt locally and rederive the commitments and address. Wallet, Quantum, and Privacy Ring then use this same session.
+
+The deterministic address can receive test ETH before deployment. Its first operation may include factory deployment, which also requires funding for account gas.
+
+### One operation, one key
+
+Each key index must authorize only one digest. The signature binds the reviewed UserOperation to its successor public-key commitment:
+
+```text
+userOpHash = ERC-4337 v0.7 operation hash
+             bound to the operation, EntryPoint and chain
+
+authorizationDigest = keccak256(userOpHash || nextPublicKeyHash)
+
+signature = nextPublicKeyHash || WOTS_sign(currentKey, authorizationDigest)
+```
+
+The stable account address remains the same while the accepted signing commitment advances.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant App as Qozmo client
+    participant Journal as Local key journal
+    participant Relay as Bundler / gas payer
+    participant EP as EntryPoint v0.7
+    participant Account as Qozmo account
+    participant Target as Asset / privacy pool
+
+    User->>App: Choose operation and review details
+    App->>App: Verify chain, code pins, state, fees and execution
+    User->>App: Confirm wallet password
+    App->>App: Recheck review and sign with current WOTS key
+    App->>Journal: Persist exact signed operation and exposure
+    Journal-->>App: Durable save acknowledged
+    App->>Relay: Submit stored signed operation
+    Relay->>EP: handleOps
+    EP->>Account: Validate WOTS and successor commitment
+    EP->>Account: Execute reviewed call
+    Account->>Target: ETH, ERC-20 or privacy operation
+    Target-->>Account: Execution result
+    EP-->>App: Receipt and events read through RPC
+    App->>App: Verify execution separately from key consumption
+```
+
+Preparation and confirmation check the configured chain, deployment block, runtime hashes, contract links, account state, balance, and execution. Reviews expire after two minutes; changed nonce, deployment, or increased fee requirements require a fresh review.
+
+**A consumed key is not proof of successful execution.** Validation can consume a key even when the account call subsequently reverts. Activity checks the matching EntryPoint event and canonical receipt before showing verified success or account fees.
+
+If submission is uncertain, Qozmo retains the signed operation. An explicit retry submits its identical stored bytes rather than signing a new message with the exposed key.
+
+### Stateful-key safety
+
+Same-origin Web Locks serialize operations and journal access. Missing or conflicting history blocks signing. Preserve the original signing device and export updated backups after signing: browser storage is not a hardware-backed anti-rollback system, and an old backup cannot establish that a key was never exposed elsewhere.
+
+**Imported accounts remain read-only.** The separate recovery workbench uses SLH-DSA research artifacts, but those artifacts are not enrolled recovery authority for the deployed account and do not reactivate spending. See [recovery architecture and release requirements](docs/recovery-and-product-tools.md#chosen-recovery-direction).
+
+## Privacy Ring
+
+Privacy Ring is the product name for Qozmo's **commitment-pool research implementation**. The current protocol uses Merkle membership proofs, not cryptographic ring signatures.
+
+### Protocol model
+
+| Component | Current design |
+| --- | --- |
+| Supported asset in the dashboard | Native test ETH |
+| Deployed denomination | `0.001 ETH` per note |
+| Commitment tree | Poseidon, depth 8, at most 256 deposits |
+| Circuit / proof | Circom and Groth16 over BN254 |
+| Note material | Independent random secret and nullifier; each is 248 bits |
+| Note storage | AES-256-GCM under a nonextractable, purpose-separated HKDF-SHA256 key derived from the account seed |
+| Withdrawal destination | The same Qozmo smart account, full denomination, zero relayer fee in the current dashboard |
+
+The SDK binds notes and proofs to their pool context:
+
+```text
+domain       = keccak256(abi.encode(protocol, chainId, pool, denomination)) mod Fr
+commitment   = Poseidon(secret, nullifier, domain)
+nullifierHash = Poseidon(nullifier, domain)
+contextHash  = Poseidon(recipient, relayer, fee, domain)
+
+Public proof signals: root, nullifierHash, domain, contextHash
+Private witness: note secrets and Merkle path, with context inputs
+```
+
+Here, `protocol` is `qozmo-privacy-v1` and `Fr` is the circuit scalar field. The circuit proves ownership of a committed note and binds its spend to the withdrawal context. The pool rejects a previously spent nullifier.
+
+### Deposit → proof → withdrawal
+
+```mermaid
+flowchart TB
+    Note["Generate private note locally"] --> Encrypt["Encrypt and durably save note"]
+    Encrypt --> Backup["Download complete or notes-only backup"]
+    Backup --> Deposit["Review and WOTS-authorize deposit"]
+    Deposit --> Tree["Pool records commitment and updates root"]
+    Tree --> Scan["Read canonical confirmed deposit events"]
+    Scan --> Prove["Build and verify proof in browser worker"]
+    Prove --> Withdraw["Review and WOTS-authorize withdrawal"]
+    Withdraw --> Verify["Pool checks proof, known root and unspent nullifier"]
+    Verify --> Receive["Mark nullifier spent and return funds to same account"]
+```
+
+**Deposit.** The client checks the pinned pool and withdrawal artifacts, protects a fresh note, and requires a backup download before preparing funding. The same Qozmo account signs the deposit call. A saved note alone is not a funded balance.
+
+**Proof.** The research scanner reconstructs sequential deposits at a confirmed canonical snapshot and verifies the tree root. A worker generates the proof locally using the archived WASM and proving key, verifies it locally, and returns public proof data. The client checks public-signal binding, and the pool call is simulated before signing.
+
+**Withdrawal.** The same account signs the pool call with its next WOTS key. The pool verifies the proof and spend state before transferring the denomination. Public account gas must still be funded; the interface does not provide gas sponsorship.
+
+These are two distinct authorization layers: **note secrets authorize the pool spend; WOTS authorizes the smart-account operation.**
+
+### Privacy boundaries
+
+Groth16/BN254 is **not post-quantum secure**. WOTS authorization does not change the proof system's security assumptions.
+
+Amounts, funding addresses, withdrawal recipients, gas payments, commitments, roots, nullifier hashes, and transaction timing remain public. The current same-account round trip links its public endpoints and makes no anonymity claim. Encrypted local notes do not create encrypted onchain balances or confidential transaction amounts.
+
+The research scan is bounded to one million blocks and 256 leaves. The client pauses new deposits before that scan range expires; longer-lived operation requires a reviewed historical indexer. Private-to-private transfers, variable-value notes, viewing keys, and selective disclosure are future protocol work.
+
+The proving setup is single-machine research only. Preserve the exact deployed proving archive; generating a new setup does not reproduce keys compatible with the existing verifier. See [Privacy Ring implementation and artifact handling](docs/privacy-ring.md).
+
+## Backup and recovery
+
+Open **Backup Center** at `/dashboard/#backup` to export one complete encrypted file or authenticate a file without importing it.
+
+| Included data | Why it matters |
+| --- | --- |
+| Account archive | Preserves the encrypted seed and account identity/salt |
+| Known signing history | Preserves exposed keys and exact signed operations, including unresolved submissions |
+| Privacy note archive | Preserves random note secrets that cannot be recreated from the recovery phrase |
+| Authenticated snapshot | Checks the included counts and local-data fingerprint |
+
+The complete `qozmo-wallet-backup` file has an AES-256-GCM outer envelope derived from the wallet password using PBKDF2-SHA256 at 600,000 iterations. Its owner, chain, format, export date, and KDF settings are authenticated. The account vault and note archive retain their own authenticated encryption.
+
+Backup Center records the last download locally and detects changes in known history or notes. Its status is a local observation, not proof that an offline copy exists or that no other device exposed a key.
+
+On a browser with no existing Qozmo account, **Import wallet → Encrypted archive** accepts a complete backup. Both contained archives are checked before restoration; existing accounts are not overwritten. Restored accounts stay read-only, and inspection never enables spending.
+
+Keep the original device and journal. The recovery phrase alone cannot reconstruct random privacy notes or establish safe WOTS signing state. See [complete-backup workflow](docs/recovery-and-product-tools.md#complete-wallet-backup).
+
+## Networks and deployed contracts
+
+The website's signing adapter is restricted to **Robinhood Testnet, chain ID `46630`**. Other configured EVM chains are available for observation. The extension's native Solana Devnet and Bitcoin Signet adapters are separate account systems.
+
+[Robinhood's network documentation](https://docs.robinhood.com/chain/connecting/) identifies Robinhood Chain as an Arbitrum L2 and lists its chain configuration. Qozmo's configured endpoints live in [networks.ts](lib/wallet/networks.ts); availability is an external dependency.
+
+| Contract | Robinhood Testnet address |
+| --- | --- |
+| EntryPoint v0.7 | `0x0000000071727De22E5E9d8BAf0edAc6f37da032` |
+| Qozmo account factory | `0xBe3a0B5f698a4F83C7679aAe7E7743D5E3d2F468` |
+| Account implementation | `0xcCBA0b7B10f809e8f3B3C1e9835acDeEdC020c39` |
+| Privacy Ring pool | `0x1bF754aCec18E5025Cd5a64F95C76A4B7F3eed0F` |
+| Groth16 verifier | `0x16bE8A958188C55EFc385ECa5D2a1Ea04d34dB82` |
+| Poseidon2 | `0x934EcAA425B420cf5bfB5C91B455604bC4bb8D24` |
+| Poseidon4 | `0xbFc56f6757d75d6AB2E6F9cF42391f39b2F20982` |
+
+These are shared infrastructure addresses; each user has a separate deterministic smart-account address. Exact pins and deployment records:
+
+- [Account deployment manifest](lib/wallet/quantum-deployment.json)
+- [Privacy deployment journal](privacy/deployments/46630.json)
+- [Privacy runtime and configuration pins](lib/wallet/privacy/research-deployment.ts)
+
+## Getting started
+
+### Requirements
+
+- Node.js **22 or 24** and npm.
+- An up-to-date browser with WebCrypto and Web Locks; use HTTPS or localhost.
+- Chrome **137+** for the extension side panel.
+- Foundry's `anvil` for local blockchain integration checks.
+- The `zip` command for extension packaging.
+
+### Run the website
+
+```bash
+git clone https://github.com/imrybrndo/qozmo-wallet.git
+cd qozmo-wallet
+npm ci
+npm run dev -- --port 3001
+```
+
+Open `http://localhost:3001`. Website routes:
+
+| Route | Workspace |
+| --- | --- |
+| `/dashboard/` | Overview, assets, network selection, and public market data |
+| `/dashboard/#quantum` | Wallet & Security, public transfers, shared connection, and pending operations |
+| `/dashboard/#privacy` | Encrypted notes, deposits, local proofs, withdrawals, and recorded demo |
+| `/dashboard/#backup` | Complete export, download freshness, and backup inspection |
+| `/dashboard/#activity` | Account operations, execution details, and explorer history |
+| `/dashboard/#payments` | Native payment requests and explicit receipt matching |
+| `/recovery/` | Independent recovery research workbench |
+| `/proof/` | Public WOTS evidence verification and project status |
+| `/extension/` | Extension download and installation guide |
+| `/docs/` | Searchable user and developer documentation |
+
+### Configure an optional gateway
+
+The static website can use a compatible user-supplied bundler or browser gas payer. To operate the optional Qozmo gateway, create a local `.env.local` from the sanitized [configuration template](.env.example), with values appropriate for your provider:
+
+```dotenv
+# Public frontend configuration: never put credentials here.
+NEXT_PUBLIC_QOZMO_GATEWAY_URL=http://127.0.0.1:8787
+
+# Server-only provider configuration.
+QOZMO_BUNDLER_URL=https://your-provider.example/your-private-endpoint
+QOZMO_ALLOWED_ORIGINS=http://localhost:3001,http://127.0.0.1:3001
+QOZMO_GATEWAY_PORT=8787
+```
+
+Run `npm run gateway` in a separate terminal and restart the frontend after changing public configuration. In **Wallet & Security** or **Privacy Ring**, select **Qozmo bundler → Check & connect**. The panel distinguishes ready, unconfigured, wrong-network, and unavailable states; a successful check does not submit a transaction.
+
+Provider credentials belong only on the gateway. A dedicated `WALLET_TESTNET` key in local `.env` is used by explicit CLI deployment/demo commands, not by the website wallet or ordinary local tests. Never commit a funded private key or put one in a `NEXT_PUBLIC_*` variable.
+
+### Restore the existing pool's proving artifacts
+
+A fresh checkout can run the frontend without the archived proving files. **New privacy funding stays disabled** until the exact deployed archive is available. Recorded evidence remains a separate read-only feature.
+
+The current build expects this ignored archive directory:
+
+```text
+privacy/artifacts/23c992a98db9c84c17c5910115e088828cbef6f61505636817c12e9814fa7af1/
+```
+
+Restore the matching archive, including its manifest and local test report, then run:
+
+```bash
+npm run build:privacy
+```
+
+The build verifies source/artifact pins and packages only public proving assets into `public/privacy-prover/`. Both `npm run dev` and `npm run build` run this step. Do not regenerate a trusted setup as a substitute for the existing deployed verifier's artifacts.
+
+For a **new, isolated research deployment**, follow the [setup, testing, and deployment procedure](docs/privacy-ring.md#run-the-complete-local-flow). Broadcast commands spend testnet gas and must be invoked explicitly.
+
+### Build the website and extension
 
 ```bash
 npm run typecheck
+npm test
 npm run build
 ```
 
-The project uses Next.js static export. `npm run build` creates the deployable `out/` directory. Publish `out/` on a static hosting service, or import the repository into Vercel. The static frontend embeds no provider secrets. The optional Qozmo gateway uses server-side environment variables; see the setup guide linked above.
+The production website is a **static export** in `out/`. Deploy that directory to static hosting. The gateway is a separate service and needs its own deployment/routing; exporting the frontend does not provision it. Use a static file server to preview `out/`, rather than `next start`.
 
-## Qozmo documentation
-
-Open `/docs/` from the landing navigation or the dashboard’s **Documentation** link. The 18 guides cover wallet setup, backups, receiving, testnet transfers, assets, networks, Qozmo Quantum, security, troubleshooting and developer setup. The docs include grouped navigation, full-text search (`⌘/Ctrl K`), section links and previous/next guides.
-
-Content lives in `lib/docs-content.ts`, the shared interface in `components/docs/`, and scoped styling in `app/docs/docs.css`. Each guide is generated as static HTML with its own metadata and direct URL.
-
-## DeFi dashboard and wallet
-
-The website uses one Qozmo WOTS smart account for public transfers, Quantum security and Privacy Ring on Robinhood Testnet (46630). Create once, then share its address, password and unlock session across dashboard features. An existing Quantum account opens automatically; previous EOA vaults remain preserved in Settings with no automatic asset migration. Other EVM networks are observation only; the picker separates Mainnet/Testnet from Chain.
-
-- **Backup Center** at `/dashboard/#backup` packages the account archive, known signed-operation history and encrypted Privacy Ring notes in one authenticated encrypted file. It records the last download locally, detects changes since that download, and can authenticate a file without installing it. Complete-file restoration uses Import wallet → Encrypted archive and remains read-only.
-- **Activity** distinguishes native ETH, ERC-20 base-unit transfers, privacy deposits/withdrawals and other account calls from their actual signed calldata. Expand a row for account fees, confirmations, hashes, public references and explorer links. Consumed keys alone never imply successful execution; failed fresh receipt checks clear earlier success/fee observations. Refresh checks the latest 20 known transaction receipts; individual rows support explicit rechecking.
-- **Shared connection** offers Qozmo gateway, browser gas payer or an HTTPS bundler from Wallet & security and Privacy Ring. It shows checking, connected, unconfigured, wrong-network or unavailable status with explicit retry. Connections and endpoint details clear on lock. Selecting a different connection does not silently retry a signed operation.
-- Native/token balances, public crypto/RWA quotes, price history, explorer-indexed history, payment requests and DeFi discovery remain available within their documented scopes.
-- The Chrome extension also supports native SOL on Solana Devnet and BTC on Bitcoin Signet using their separate standard-vault addresses. Website and extension storage origins remain distinct; WOTS remains exclusive to the Robinhood smart account.
-
-Complete backups use PBKDF2-SHA256 (600,000 iterations) and AES-256-GCM, authenticating account identity, chain and export metadata. Every contained WOTS archive and note is checked before completeness is reported. A download timestamp cannot prove off-device retention or complete cross-device history. Keep the original signing device; imported accounts never become active signers through inspection or restoration.
-
-See [workspace backup, activity and connections](docs/recovery-and-product-tools.md#unified-account-workspace) and [Privacy Ring implementation](docs/privacy-ring.md).
+To package only the Chrome extension:
 
 ```bash
-npm test
-npm run typecheck
-npm run wallet:unified:test
+npm run build:extension
+npm run verify:extension
 ```
 
-## Landing-page features
+Open `chrome://extensions`, enable **Developer mode**, choose **Load unpacked**, and select `dist/chrome/qozmo-wallet-extension/`. The toolbar opens the native side panel. The downloadable package is `public/downloads/qozmo-wallet-chrome.zip`.
 
-- Live crypto and real-world asset prices streamed from Kraken
-- Crypto, stock, ETF, gold and stablecoin selection, rolling 24-hour price change, and real daily low/high range
-- Tokenized gold, equity, and ETF quotes with individual trade timestamps
-- Automatic reconnect, offline status, and preserved last-received prices
-- Responsive navigation and section links
-- Sample wallet balance visibility
-- Illustrative spending and activity panels and charts
-- Card color customization
-- Dedicated wallet dashboard and a 3D Mastercard/Visa card concept dialog
-- Searchable sample activity
-- Keyboard-accessible FAQ accordion
-- Reduced-motion preferences
+Preserve the installation folder and browser profile when updating. Website vaults are not automatically synchronized into the extension. See the [Chrome extension guide](docs/chrome-extension.md) for permissions, supported flows, and installation limits.
 
-## Live crypto and RWA prices
+## Validation and evidence
 
-The hero opens one public WebSocket connection to `wss://ws.kraken.com/v2`, subscribes to the `ticker` channel, receives initial snapshots, and merges subsequent trade updates. The static Next.js export needs no server, API key, or private account. A visitor's browser must be able to reach Kraken.
+The recorded local validation snapshot from **12 November 2026** passed **175 tests**, along with TypeScript checks and the production build. This is an observed development result, not an independent security audit or hosted CI certification.
 
-| Asset | Kraken pair | Category |
-| --- | --- | --- |
-| Bitcoin | `BTC/USD` | Cryptocurrency |
-| Ethereum | `ETH/USD` | Cryptocurrency |
-| Solana | `SOL/USD` | Cryptocurrency |
-| PAX Gold | `PAXG/USD` | Tokenized gold |
-| NVIDIA xStock | `NVDAx/USD` | Tokenized equity |
-| SP500 xStock | `SPYx/USD` | Tokenized ETF |
-| Apple xStock | `AAPLx/USD` | Tokenized equity |
-| Microsoft xStock | `MSFTx/USD` | Tokenized equity |
-| Tesla xStock | `TSLAx/USD` | Tokenized equity |
-| Nasdaq 100 xStock | `QQQx/USD` | Tokenized ETF |
-| USD Coin | `USDC/USD` | Stablecoin |
+| Command | What it checks |
+| --- | --- |
+| `npm test` | Cryptography, journal persistence/conflicts, account policy, backups, call classification, receipts, connections, native adapters, and isolated UI behavior |
+| `npm run typecheck` | TypeScript consistency |
+| `npm run build` | Pinned prover packaging when available, extension packaging, and the static website build |
+| `npm run wallet:unified:test` | Isolated Anvil deposit → browser-bundled proof → withdrawal → public transfer → complete backup verification |
+| `npm run privacy:demo:test` | Isolated CLI demo lifecycle and evidence/tamper checks |
+| `npm run verify:extension` | Extension package, manifest, local assets, checksum, and archive integrity |
+| `npm run verify:wots -- --tx <hash> --account <address>` | Read-only verification of a supplied public WOTS transaction |
 
-Prices are the provider's last traded USD prices. `change_pct`, `low`, and `high` supply the actual rolling 24-hour percentage and range; the range is not a fabricated historical chart. Every quote retains its provider timestamp. A connected feed does not mean that an illiquid asset has traded recently, so older trade times remain visible.
+Artifact-dependent integration commands require the matching proving build/archive and `anvil`. Local blockchain tests use public development keys and do not require the user's `.env` signer.
 
-The client validates asset symbols and numeric data, ignores malformed quotes, and prevents older trades from overwriting newer ones. Connection and silence timeouts detect failures. It resubscribes with exponential backoff and jitter, handles browser offline/online events, and reconnects stale connections when the tab becomes visible. Disconnected prices are labeled as last received; no example prices are substituted. Subscription or snapshot failures show a partial feed state.
+### Recorded testnet evidence
 
-Implementation: `lib/market-data.ts`, `components/use-market-prices.ts`, `components/market-phone-screen.tsx`, and `app/market-phone.css`. The photographic scene is composed in `components/market-hero.tsx` and `app/market-hero.css`.
+An earlier CLI privacy demo completed on **11 November 2026** with a `0.001 ETH` deposit and withdrawal:
 
-Provider references: [Kraken ticker v2](https://docs.kraken.com/exchange/api-reference/spot-websocket-v2/ticker), [reconnection guidance](https://docs.kraken.com/exchange/guides/websockets/reconnection), [PAX Gold](https://www.paxos.com/assets/paxg), and [xStocks](https://defi.xstocks.fi/).
+- [Recorded deposit transaction](https://explorer.testnet.chain.robinhood.com/tx/0xfb9e3a961fbb0449096a0eeaeb7d1e151c14863534a9e0331f121c68e8d519c6)
+- [Recorded withdrawal transaction](https://explorer.testnet.chain.robinhood.com/tx/0xfe7df0106a7416dce878b29fe5fc54eb653a5e1b594853e7f0eafd4a47f64714)
+- [Machine-readable public evidence](lib/wallet/privacy/demo-evidence.json)
 
-## Hand-held phone hero
+This recorded CLI run is distinct from the newer unified WOTS-account integration, which has been exercised on isolated Anvil. Neither the local integration result nor the recorded CLI receipts establish a newly funded production-browser or installed-extension transaction. The dashboard offers an explicit fresh read-only check of the recorded evidence when RPC access is available.
 
-The right side of the hero uses an original photorealistic hand-and-phone cutout generated with ImageGen. The screen is live React UI: the expanded watchlist, asset selection, range, retry control, provider attribution, and the wallet-demo button remain interactive.
+## Security model and current limits
 
-The image and screen overlay share a fixed 1086×1448 coordinate canvas. The 504×1040 screen aperture is positioned at (171,120); a 360px UI scales 1.4× into it. CSS scales the entire composition responsively, and tilt, float, scroll depth, and pointer parallax are applied to their shared parent so the hand, bezel, and UI stay aligned. The small-screen layout centers the display while the wrist naturally extends toward the edge of the hero.
+| Boundary | Current position |
+| --- | --- |
+| Account authorization | Custom WOTS/Keccak-256 research implementation; no independent audit or certification claimed |
+| Privacy proof | Groth16/BN254; not post-quantum |
+| Local key custody | Password-encrypted storage; unlocked secrets exist in browser memory |
+| Stateful-key history | Same-origin serialization and durable journaling; cloned devices and storage rollback are not solved |
+| Restored accounts | Read-only; backup possession does not activate lost-device spending |
+| Privacy metadata | Public denomination, endpoints, gas, and timing; same-account withdrawal provides no anonymity claim |
+| Mainnet | No activated Qozmo smart-account signing or Privacy Ring rollout |
+| Extension native chains | Standard SOL/BTC authorization; not covered by WOTS |
+| Relays and data providers | External availability, privacy, and service dependencies; no automatic sponsorship or silent submission retry |
+| Future protocol features | Variable-value/private-to-private transfers, selective disclosure, and reviewed recovery activation remain unimplemented |
 
-Asset: `public/images/hand-phone.png`. The full generation prompt and asset details are in `docs/hand-phone-asset.md`. No image is hotlinked from the reference website.
+Execution simulation is a pre-signing check, not a guarantee of inclusion or outcome. A not-yet-deployed account has a more limited preview; the privacy client can simulate the target call without separately simulating the complete undeployed wrapper. Fees and public state may change, and confirmations are dated observations rather than irreversible finality.
 
-## Clean hero and sticky navigation
+The landing page also contains illustrative wallet/card concepts. Market quotes are not holdings, stock-token units are not necessarily underlying share counts, and viewing a DeFi protocol does not execute a deposit, swap, bridge, or staking transaction. No payment card or mobile application is issued by this repository.
 
-The hero uses a text eyebrow, balanced typography, two plain actions, and one concise supporting line. Decorative stars, sketch arrows, the hero grid, and repeated CTA icons have been removed. The hand-held phone keeps its live data and parallax, with a calmer segmented asset selector and fewer icons.
+Further release work includes independent circuit/contract/client review, stronger state and recovery guarantees, historical indexing beyond the bounded research scanner, browser/device performance checks, and funded testnet acceptance of the complete user journey.
 
-The main header is a page-level sibling of the hero rather than a child of its clipped parallax scene. `position: sticky` keeps it at the top throughout the page; the translucent background and subtle border preserve legibility. Desktop navigation is centered between the brand and demo action. Mobile navigation closes on selection, outside click, Escape, or a transition to desktop width. Anchor spacing accounts for the sticky header.
+## Repository structure
 
-The navbar now uses a rounded floating frame and pill-shaped active links. After 24 px of scrolling, the landing navbar and dashboard topbar switch to a translucent glass surface with blur, saturation and a soft shadow. Their dimensions stay fixed during the transition to avoid layout jumps. Mobile menus retain their existing dismissal behavior, with rounded styling and a bounded scroll area. Unsupported blur falls back to an opaque surface; reduced motion and reduced transparency preferences are respected. Scroll state is shared through `components/use-scrolled.ts`.
-
-Styles for these refinements live in `app/landing-refinement.css`. Asset symbols, menu controls, and other meaningful interface icons continue to use Font Awesome.
-
-## Font Awesome icons
-
-Interface icons throughout the landing page and wallet demo use the official Font Awesome React component with the free Solid, Regular, and Brands icon packs. The icon mapping is centralized in `components/icons.tsx`, including Spotify and Dribbble brand marks. Icons are bundled with the application, so no external Font Awesome Kit or API key is needed.
-
-The shared icon wrapper preserves the page's existing sizing and accessible button labels. Font Awesome's styles are loaded once in the root layout, and automatic style injection is disabled for Next.js. Custom Qozmo branding, the spending charts, and decorative artwork remain SVG illustrations.
-
-## Magic UI animations
-
-The page includes four components adapted from the official [Magic UI](https://magicui.design) registry: **Blur Fade**, **Shimmer Button**, **Border Beam**, and **Animated Shiny Text**. Their original animation mechanisms are retained, with Tailwind classes translated to the project's scoped CSS. The upstream MIT license is included in `components/magicui/LICENSE`.
-
-- Staggered hero entrances and section/card reveals on scroll
-- Soft shimmer around primary buttons
-- A subtle pastel border beam on the final call to action
-- Floating hand-held phone and logo tile, with their original rotations preserved
-- Animated chart drawing, gradient drift, and occasional card highlights
-- A footer **Pause motion / Play motion** control
-- Automatic respect for system reduced-motion preferences and a no-JavaScript content fallback
-
-Floating panels pause when hovered, focused, or outside the viewport. Animation settings are shared through `components/motion-system.tsx`; scoped styles live in `app/magicui.css` and `app/qozmo-motion.css`.
-
-## Interactive parallax
-
-Scroll through the page to see the hand-held phone, soft glow, and decorative shapes move at different speeds. The orbit illustration and closing banner use the same depth effect. On a desktop with a mouse, the market artwork and orbit illustration also respond gently to the pointer.
-
-The implementation uses the existing Motion dependency, with stationary scene measurements, bounded layer movement, and spring smoothing. Each moving wrapper preserves its child's original rotation and floating animation. Headings and primary calls to action remain in the page layout; navigation stays visible at the top. Normal browser scrolling is preserved.
-
-- Narrow screens and coarse pointers use smaller vertical travel, with no horizontal movement or extra rotation.
-- Mouse movement is suspended over interactive controls and while they have keyboard focus.
-- The existing **Pause motion** control and system reduced-motion setting disable parallax as well as the other animations.
-- The static layout remains readable without JavaScript.
-
-`components/parallax.tsx` contains the reusable `ParallaxScene` and `ParallaxLayer` components. `app/parallax.css` handles layer stacking, pointer access, and background coverage. Adjust a layer's `y`, `x`, `rotate`, `pointerDepth`, or `mobileScale` props to tune its depth.
-
-## Public proof and project status
-
-Open `/proof/` to reverify WOTS execution, inspect the attributed pre-Qozmo core reference, check anonymous GitHub access, and see mainnet release criteria and the current $QZO integration status. Verification is read-only and never accesses a seed or signing journal. See [proof and release status](docs/proof-and-release-status.md).
-
-```bash
-npm run verify:wots -- --tx <transaction-hash> --account <quantum-address>
-npm run verify:qzo
+```text
+app/                         Next.js routes and responsive styles
+components/
+  dashboard/                 Wallet views, markets, network picker, privacy interface
+  wallet/                    Shared account, Backup Center, Activity, connection panel
+  docs/                      Searchable documentation interface
+lib/wallet/
+  quantum/                   Qozmo account storage, chain policy, signing adapter
+  quantum-sdk/               Integrated WOTS and ERC-4337 core
+  privacy/                   Notes, events, calldata, prover adapter, deployment pins
+  multichain/                Native Solana Devnet and Bitcoin Signet adapters
+  account-backup.ts          Complete encrypted backup format and inspection
+  account-activity.ts        Signed-call classification and execution-state mapping
+  connection.ts              Managed-gateway health states
+privacy/
+  circuits/                  Circom withdrawal circuit
+  contracts/                 Solidity commitment pool
+  deployments/               Public deployment journal
+  artifacts/                 Ignored archived proving builds
+scripts/                     Build, gateway, deployment and verification tooling
+extension/                   Manifest V3 entry points and UI-only service worker
+tests/                       Cryptographic, transaction and UI regression coverage
+public/                      Brand assets and generated public downloads
 ```
 
-## Extension asset manager
+**Stack:** Next.js App Router, React, TypeScript, viem, noble/scure cryptography, WebCrypto, Solidity, Circom, snarkjs, and Poseidon. Local verification uses Node's test runner, JSDOM, and Foundry Anvil.
 
-The Quantum extension’s **Manage** control supports ERC-20 import, explorer suggestions, per-account token visibility and a zero-balance filter on Robinhood Testnet. Imported tokens are checked against the chain RPC before adding them. Token details route into the existing reviewed send flow. Public display preferences use a separate storage namespace from the encrypted vault and one-time-key journal. See [Chrome extension guide](docs/chrome-extension.md).
+## Documentation
 
-## Project structure
+| Guide | Focus |
+| --- | --- |
+| [Privacy Ring](docs/privacy-ring.md) | Circuit, pool, artifact handling, deployment, evidence, and privacy assumptions |
+| [Unified account workspace](docs/recovery-and-product-tools.md#unified-account-workspace) | Complete backups, Activity, shared connections, and recovery boundaries |
+| [Quantum core integration](docs/qozmo-quantum.md) | Original integration, contract pins, storage design, and source provenance |
+| [Chrome extension](docs/chrome-extension.md) | Side-panel installation, permissions, updates, and validation scope |
+| [Native multichain adapters](docs/multichain-wallet.md) | Solana/Bitcoin derivation, transfer rules, and account separation |
+| [Proof and release status](docs/proof-and-release-status.md) | Public WOTS evidence and mainnet release criteria |
+| [Wallet implementation](docs/wallet-implementation.md) | Earlier EOA implementation and supporting wallet components |
+| [Brand identity](docs/brand-identity.md) | Shared emblem, assets, and attribution |
+| [Hero artwork](docs/hand-phone-asset.md) | Landing-page illustration and composition details |
 
-- `app/docs/`: static documentation routes and responsive docs styles
-- `components/docs/`: documentation shell, search and article renderer
-- `lib/docs-content.ts`: guide content, navigation and search index
-- `app/dashboard/`: DeFi workspace route and scoped styles
-- `components/dashboard/`: dashboard, wallet dialogs, markets, protocol discovery, and Qozmo Quantum
-- `lib/wallet/`: encrypted vault, network configuration, transactions, activity, the integrated WOTS core, and optional quantum proofs
-- `tests/`: meaningful cryptographic and transaction guard checks
-- `app/page.tsx`: page composition and landing-page interactions
-- `app/globals.css`: base responsive page styling
-- `app/landing-refinement.css`: clean hero and sticky navigation
-- `components/market-hero.tsx`: photographic hand-held phone composition
-- `components/market-phone-screen.tsx`: interactive live market screen
-- `components/use-market-prices.ts`: public market connection and recovery
-- `lib/market-data.ts`: asset metadata, quote validation, and formatting
-- `app/market-hero.css`: responsive photo/screen alignment and phone tilt
-- `app/market-phone.css`: wallet screen interface styling
-- `components/wallet-art.tsx`: sample wallet cards and spending chart
-- `components/wallet-demo.tsx`: interactive demo dialog
-- `app/demo.css`: demo styles
-- `components/brand.tsx`: Qozmo identity and decorative SVGs
-- `app/layout.tsx`: metadata, font, and global styles
-- `public/`: favicon and social preview artwork
+Some implementation guides retain dated validation snapshots from earlier stages. This README describes the current unified website architecture; refer to the linked source modules and explicit evidence records when evaluating a particular release.
 
-## Product boundary
+## Attribution and references
 
-The landing page includes real public market quotes and illustrative spending/activity panels and Coming soon card concepts. The `/dashboard/` route uses one encrypted Qozmo WOTS smart account for Wallet, Quantum and Privacy Ring. Earlier EOA vaults are preserved in Settings without automatic migration. Live prices are a watchlist, separate from holdings; native and ERC-20 balance reads use blockchain RPCs. Tokenized stock holdings are raw token units; they are not underlying-share counts. Kraken xStocks prices are never used to value Robinhood-issued tokens. Mainnet signing, everyday-EOA ERC-20 sends, token approvals, swaps and staking transactions remain disabled. The shared Wallet & security workspace supports ETH/ERC-20 testnet transfers through a connected ERC-4337 bundler or an explicitly connected browser gas-payer wallet. No provider credentials are bundled with the static application. No payment card or mobile application is issued through this website.
+The WOTS/ERC-4337 core was integrated from the supplied Winternitz SDK checkout at source revision `42721b4f50ef6e48291a8de862fa76e9b570d42d`. Original cryptographic domains and wire formats are retained for compatibility. Per-file hashes and import adaptations are recorded in [provenance.json](lib/wallet/quantum-sdk/provenance.json).
 
-The Manrope font is self-hosted through its npm package. No third-party analytics or external image requests are required.
+Magic UI adaptations retain their [MIT notice](components/magicui/LICENSE). Review upstream code, proving-toolchain, and asset licenses before redistribution; this README does not assign a new repository-wide license.
 
-## Privacy Ring research
+Primary technical references:
 
-Phase 1 includes a fixed-denomination ETH pool, Circom/Groth16 circuit and verifier pipeline, TypeScript note/calldata SDK, encrypted backups, and a dashboard demo at `/dashboard/#privacy`. A research pool with denomination 0.001 test ETH is deployed on Robinhood Testnet at [`0x1bF754aCec18E5025Cd5a64F95C76A4B7F3eed0F`](https://explorer.testnet.chain.robinhood.com/address/0x1bF754aCec18E5025Cd5a64F95C76A4B7F3eed0F). A real testnet deposit/proof/withdrawal round-trip completed; the dashboard explores its three stages and can freshly verify receipts, public proof and spent state. The unified dashboard also prepares live deposit/withdrawal operations from the same Qozmo smart account, generates withdrawal proofs locally in a worker, and confirms with the existing wallet password. New unified account operations have been verified on isolated Anvil; the older recorded run remains separate testnet evidence. The proving setup remains research only; the same-wallet round-trip publishes both receipts and makes no anonymity claim. Run `npm run privacy:demo` for preview, or `npm run privacy:demo -- --broadcast` to resume the recorded demo without duplicate transactions. See [demo evidence, recovery and implementation limits](docs/privacy-ring.md#dashboard-demo).
-
-For Robinhood Testnet deployment, save a dedicated private key as `WALLET_TESTNET` in local `.env`, then run `npm run privacy:deploy` for preflight. `npm run privacy:deploy -- --broadcast` deploys four contracts with a 0.005 test ETH gas-fee budget and records resumable receipts. `npm run privacy:verify` tests the deployed verifier using read-only proof calls. See the [deployment procedure](docs/privacy-ring.md#deploy-to-robinhood-testnet) for artifact backup and journal recovery. Run `npm run wallet:unified:test` for the isolated account/privacy integration check.
+- [ERC-4337 specification](https://eips.ethereum.org/EIPS/eip-4337) — account abstraction and UserOperations; this implementation pins the v0.7 deployment and encoding.
+- [NIST FIPS 205](https://csrc.nist.gov/pubs/fips/205/final) — SLH-DSA, used in the separate recovery research workbench; not certification of Qozmo's WOTS construction.
+- [Circom documentation](https://docs.circom.io/) and [snarkjs](https://github.com/iden3/snarkjs) — circuit/proof tooling.
+- [Robinhood Chain documentation](https://docs.robinhood.com/chain/connecting/) — network configuration and infrastructure.
