@@ -1,0 +1,246 @@
+PILIH BAHASA / LANGUAGES / 语言 / اللغات
+1. Bahasa Indonesia
+2. English
+3. 简体中文（Mandarin / Chinese）
+4. العربية (Arabic)
+
+======================================================================
+BAHASA INDONESIA
+======================================================================
+
+QOZMO — SOURCE CODE LENGKAP
+Versi 8 November 2026 — termasuk logo resmi crypto/RWA terbaru.
+
+1. PERSIAPAN
+Gunakan Node.js 22 atau 24, beserta npm.
+Ekstrak ZIP ini. Semua source berada di folder qozmo-wallet.
+
+2. JALANKAN LOKAL
+Buka Terminal di folder qozmo-wallet, lalu jalankan:
+
+npm ci
+npm run dev
+
+Buka URL yang dicetak oleh Next.js, biasanya http://localhost:3000.
+Landing page: /
+Dashboard: /dashboard/
+
+3. BUILD PRODUKSI
+npm run build
+
+Project menggunakan Next.js static export. Hasil build berada di folder out/.
+Folder out/ dapat dipublikasikan ke hosting statis.
+
+4. VERIFIKASI
+npm run typecheck
+npm test
+
+5. ISI PROJECT
+app/          : landing page, dashboard, styling, dan metadata Next.js
+components/   : komponen UI, animasi, parallax, market, dan dialog wallet
+lib/          : market data, registry logo aset, dan library wallet
+public/       : logo Qozmo, logo resmi aset, gambar mockup, favicon
+scripts/      : script development
+tests/       : tes library wallet
+docs/         : dokumentasi implementasi, validasi, dan sumber aset
+package.json + package-lock.json : dependencies dan versi terkunci
+README.md + konfigurasi Next.js/TypeScript : petunjuk lengkap dan konfigurasi
+
+node_modules, .next, out, dan riwayat Git tidak dimasukkan dalam ZIP.
+Folder tersebut bukan source aplikasi; npm ci dan npm run build membuatnya.
+Konfigurasi hosting privat ChatGPT tidak diperlukan untuk menjalankan project lokal.
+Tidak ada API key atau file .env yang perlu disiapkan untuk versi ini.
+Akses internet diperlukan untuk npm ci dan data pasar/RPC publik.
+
+6. CAKUPAN WALLET
+Wallet EVM, vault lokal terenkripsi, balances, dan transfer native testnet tersedia.
+Qozmo Quantum kini menyediakan smart account WOTS terpisah di Robinhood Testnet:
+create/import read-only, receive, kirim ETH/ERC-20, jurnal kunci sekali pakai,
+retry operasi identik dan backup terenkripsi. Akun EVM biasa tetap ECDSA.
+Lihat docs/qozmo-quantum.md untuk koneksi relay dan batas rilis testnet. Detail lengkap ada di README.md.
+
+======================================================================
+ENGLISH
+======================================================================
+
+QOZMO — COMPLETE SOURCE CODE
+Version: 8 November 2026 — includes the latest official crypto/RWA logos.
+
+1. PREREQUISITES
+Use Node.js 22 or 24, with npm.
+Extract this ZIP. All source code is in the qozmo-wallet folder.
+
+2. RUN LOCALLY
+Open a terminal in the qozmo-wallet folder, then run:
+
+npm ci
+npm run dev
+
+Open the URL printed by Next.js, usually http://localhost:3000.
+Landing page: /
+Dashboard: /dashboard/
+
+3. PRODUCTION BUILD
+npm run build
+
+The project uses Next.js static export. Build output is in the out/ folder.
+The out/ folder can be published to static hosting.
+
+4. VERIFICATION
+npm run typecheck
+npm test
+
+5. PROJECT CONTENTS
+app/          : landing page, dashboard, styles, and Next.js metadata
+components/   : UI components, animations, parallax, market, and wallet dialogs
+lib/          : market data, asset logo registry, and wallet libraries
+public/       : Qozmo logos, official asset logos, mockup images, and favicon
+scripts/      : development scripts
+tests/        : wallet library tests
+docs/         : implementation documentation, validation, and asset sources
+package.json + package-lock.json : dependencies and locked versions
+README.md + Next.js/TypeScript configuration : full instructions and configuration
+
+node_modules, .next, out, and Git history are not included in the ZIP.
+These folders are generated artifacts, not application source code.
+npm ci creates node_modules; npm run build generates .next and out.
+Private ChatGPT hosting configuration is not required to run the project locally.
+No API key or .env file needs to be prepared for this version.
+Internet access is required for npm ci and public market data/RPC services.
+
+6. WALLET SCOPE
+An EVM wallet, encrypted local vault, balances, and native testnet transfers are available.
+Qozmo Quantum now provides a separate WOTS smart account on Robinhood Testnet:
+account creation/read-only import, receiving funds, sending ETH/ERC-20,
+a one-time key journal, retries of identical operations, and encrypted backups.
+Regular EVM accounts still use ECDSA.
+See docs/qozmo-quantum.md for relay connectivity and testnet release limitations.
+Full details are in README.md.
+
+======================================================================
+简体中文（MANDARIN / CHINESE）
+======================================================================
+
+QOZMO — 完整源代码
+版本：2026年11月8日 — 包含最新的加密资产/RWA官方标志。
+
+1. 准备工作
+使用 Node.js 22 或 24，并安装 npm。
+解压此 ZIP 文件。所有源代码都位于 qozmo-wallet 文件夹中。
+
+2. 本地运行
+在 qozmo-wallet 文件夹中打开终端，然后运行：
+
+npm ci
+npm run dev
+
+打开 Next.js 输出的 URL，通常为 http://localhost:3000。
+首页：/
+仪表盘：/dashboard/
+
+3. 生产构建
+npm run build
+
+本项目使用 Next.js 静态导出。构建结果位于 out/ 文件夹中。
+可将 out/ 文件夹发布到静态托管服务。
+
+4. 验证
+npm run typecheck
+npm test
+
+5. 项目内容
+app/          : 首页、仪表盘、样式和 Next.js 元数据
+components/   : UI 组件、动画、视差效果、行情和钱包对话框
+lib/          : 行情数据、资产标志注册表和钱包库
+public/       : Qozmo 标志、官方资产标志、模型展示图和网站图标
+scripts/      : 开发脚本
+tests/        : 钱包库测试
+docs/         : 实现文档、验证说明和资产来源
+package.json + package-lock.json : 依赖项及其锁定版本
+README.md + Next.js/TypeScript 配置：完整说明和配置
+
+ZIP 文件不包含 node_modules、.next、out 和 Git 历史记录。
+这些文件夹是生成产物，不是应用源代码。
+npm ci 创建 node_modules；npm run build 生成 .next 和 out。
+在本地运行项目不需要 ChatGPT 私有托管配置。
+此版本无需准备 API 密钥或 .env 文件。
+运行 npm ci 以及访问公共行情数据/RPC 服务需要互联网连接。
+
+6. 钱包功能范围
+支持 EVM 钱包、本地加密保险库、余额查询和测试网原生代币转账。
+Qozmo Quantum 现已在 Robinhood Testnet 上提供独立的 WOTS 智能账户：
+创建账户/只读导入、收款、发送 ETH/ERC-20、一次性密钥日志、
+重试完全相同的操作以及加密备份。普通 EVM 账户仍使用 ECDSA。
+有关中继连接和测试网版本限制，请参阅 docs/qozmo-quantum.md。
+完整详情见 README.md。
+
+======================================================================
+العربية (ARABIC)
+======================================================================
+
+QOZMO — الشفرة المصدرية الكاملة
+الإصدار: 8 نوفمبر 2026 — يتضمن أحدث الشعارات الرسمية للأصول المشفرة والأصول الحقيقية المرمّزة (RWA).
+
+1. المتطلبات
+استخدم Node.js بالإصدار 22 أو 24، مع npm.
+فك ضغط ملف ZIP هذا. توجد جميع ملفات الشفرة المصدرية في المجلد التالي:
+qozmo-wallet
+
+2. التشغيل محليًا
+افتح الطرفية داخل مجلد المشروع، ثم نفّذ:
+
+npm ci
+npm run dev
+
+افتح الرابط الذي يعرضه Next.js، وعادةً يكون:
+http://localhost:3000
+مسار الصفحة الرئيسية:
+/
+مسار لوحة التحكم:
+/dashboard/
+
+3. بناء نسخة الإنتاج
+npm run build
+
+يستخدم المشروع التصدير الثابت في Next.js. توجد ملفات البناء في المجلد التالي:
+out/
+يمكن نشر هذا المجلد على خدمة استضافة مواقع ثابتة.
+
+4. التحقق
+npm run typecheck
+npm test
+
+5. محتويات المشروع
+app/          : الصفحة الرئيسية ولوحة التحكم والتنسيقات والبيانات الوصفية لـ Next.js
+components/   : مكونات الواجهة والرسوم المتحركة وتأثيرات اختلاف المنظر والسوق وحوارات المحفظة
+lib/          : بيانات السوق وسجل شعارات الأصول ومكتبات المحفظة
+public/       : شعارات Qozmo وشعارات الأصول الرسمية والصور التوضيحية وأيقونة الموقع
+scripts/      : سكربتات التطوير
+tests/        : اختبارات مكتبات المحفظة
+docs/         : وثائق التنفيذ والتحقق ومصادر الأصول
+package.json + package-lock.json : التبعيات وإصداراتها المثبتة
+README.md + إعدادات Next.js/TypeScript : التعليمات الكاملة والإعدادات
+
+لا يتضمن ملف ZIP المجلدات التالية أو سجل Git:
+node_modules
+.next
+out
+هذه المجلدات ملفات مولّدة وليست الشفرة المصدرية للتطبيق.
+ينشئ الأمر الأول مجلد التبعيات، وينشئ الأمر الثاني مجلدَي البناء والتصدير:
+npm ci
+npm run build
+
+لا يلزم إعداد الاستضافة الخاصة بـ ChatGPT لتشغيل المشروع محليًا.
+لا يتطلب هذا الإصدار تجهيز مفتاح API أو ملف .env.
+يلزم الاتصال بالإنترنت لتثبيت التبعيات والوصول إلى بيانات السوق وخدمات RPC العامة.
+
+6. نطاق وظائف المحفظة
+تتوفر محفظة EVM وخزنة محلية مشفرة وعرض الأرصدة وتحويل العملة الأصلية على شبكة الاختبار.
+يوفر Qozmo Quantum الآن حسابًا ذكيًا منفصلًا يعتمد على WOTS على شبكة Robinhood Testnet، ويدعم:
+إنشاء الحساب أو استيراده للقراءة فقط، واستلام الأموال، وإرسال ETH ورموز ERC-20،
+وسجل مفاتيح الاستخدام الواحد، وإعادة محاولة العمليات المطابقة تمامًا، والنسخ الاحتياطية المشفرة.
+تظل حسابات EVM العادية معتمدة على ECDSA.
+لمعرفة كيفية الاتصال بخدمة الترحيل وحدود إصدار شبكة الاختبار، راجع:
+docs/qozmo-quantum.md
+توجد التفاصيل الكاملة في:
+README.md
